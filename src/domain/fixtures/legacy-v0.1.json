@@ -1,0 +1,2211 @@
+{
+  "metadata": {
+    "fixtureVersion": 1,
+    "baselineCommit": "514c7f8",
+    "behaviorProfile": "legacy-v0.1",
+    "capturedFrom": "src/domain at baseline commit; expected outputs captured once and reviewed as literals",
+    "seedPolicy": "Explicit finite integer per case; fixed section and line IDs",
+    "scope": "Characterization only; legacy limitations are not target requirements",
+    "knownLimitations": [
+      "Dense third-person delivery appends first-person beside me",
+      "Known cadence preset takes precedence over custom syllable range",
+      "No narrative-state interpretation; purpose and concept do not select verse families",
+      "Project validation internally allocates fallback IDs/time, but complete fixture inputs preserve explicit IDs/time"
+    ]
+  },
+  "input": {
+    "project": {
+      "schemaVersion": 1,
+      "app": "LyricLab",
+      "id": "legacy-project-a",
+      "title": "Copper Compass",
+      "concept": "Choose a direction without pretending to know the destination.",
+      "seed": 2408,
+      "style": {
+        "genres": [
+          {
+            "id": "indie-folk",
+            "weight": 7
+          },
+          {
+            "id": "dream-pop",
+            "weight": 3
+          }
+        ],
+        "moods": [
+          {
+            "id": "Reflective",
+            "weight": 6
+          },
+          {
+            "id": "Hopeful",
+            "weight": 4
+          }
+        ],
+        "bpm": 92,
+        "rhythm": "Steady 4/4",
+        "voice": {
+          "type": "Lead",
+          "register": "Mid-range",
+          "texture": [
+            "Airy",
+            "Warm"
+          ],
+          "delivery": [
+            "Melodic"
+          ]
+        },
+        "bass": [
+          "Warm bass"
+        ],
+        "drums": [
+          "Soft live drums"
+        ],
+        "instrumentation": [
+          "Acoustic guitar",
+          "Ambient pads"
+        ],
+        "production": [
+          "Organic",
+          "Spacious"
+        ],
+        "mix": [
+          "Vocal-forward"
+        ]
+      },
+      "language": {
+        "theme": "Finding your way",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "structure": [
+        {
+          "id": "legacy-verse-a",
+          "type": "verse",
+          "name": "Verse 1",
+          "purpose": "Establish the journey",
+          "intensity": 40,
+          "rhymeScheme": "ABAB",
+          "syllableRange": [
+            8,
+            12
+          ],
+          "delivery": "Melodic",
+          "locked": false,
+          "lines": [
+            {
+              "id": "legacy-a1",
+              "text": "My handwritten compass points north",
+              "locked": true,
+              "authored": true
+            },
+            {
+              "id": "legacy-a2",
+              "text": "I chose these words myself",
+              "locked": false,
+              "authored": true
+            },
+            {
+              "id": "legacy-a3",
+              "text": "An older procedural draft",
+              "locked": false,
+              "authored": false
+            },
+            {
+              "id": "legacy-a4",
+              "text": "Another procedural draft",
+              "locked": false,
+              "authored": false
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "ignoredWarnings": [
+          "legacy-a1:meter"
+        ]
+      },
+      "updatedAt": "2026-10-07T12:00:00.000Z"
+    },
+    "freshSection": {
+      "id": "legacy-generated-verse",
+      "type": "verse",
+      "name": "Verse 1",
+      "purpose": "Establish the journey",
+      "intensity": 40,
+      "rhymeScheme": "ABAB",
+      "syllableRange": [
+        8,
+        12
+      ],
+      "delivery": "Melodic",
+      "locked": false,
+      "lines": [
+        {
+          "id": "legacy-generated-1",
+          "text": "",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-2",
+          "text": "",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-3",
+          "text": "",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-4",
+          "text": "",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    }
+  },
+  "rng": {
+    "seed": 12345,
+    "expected": [
+      0.9797282677609473,
+      0.3067522644996643,
+      0.484205421525985,
+      0.817934412509203,
+      0.5094283693470061,
+      0.34747186047025025,
+      0.07375754183158278,
+      0.7663964673411101
+    ]
+  },
+  "weights": {
+    "input": [
+      {
+        "id": "b",
+        "weight": 2
+      },
+      {
+        "id": "a",
+        "weight": 2
+      },
+      {
+        "id": "zero",
+        "weight": 0
+      },
+      {
+        "id": "negative",
+        "weight": -1
+      }
+    ],
+    "expected": [
+      {
+        "id": "a",
+        "weight": 50
+      },
+      {
+        "id": "b",
+        "weight": 50
+      }
+    ]
+  },
+  "styles": [
+    {
+      "id": "folk-dream",
+      "seed": 2408,
+      "style": {
+        "genres": [
+          {
+            "id": "indie-folk",
+            "weight": 7
+          },
+          {
+            "id": "dream-pop",
+            "weight": 3
+          }
+        ],
+        "moods": [
+          {
+            "id": "Reflective",
+            "weight": 6
+          },
+          {
+            "id": "Hopeful",
+            "weight": 4
+          }
+        ],
+        "bpm": 92,
+        "rhythm": "Steady 4/4",
+        "voice": {
+          "type": "Lead",
+          "register": "Mid-range",
+          "texture": [
+            "Airy",
+            "Warm"
+          ],
+          "delivery": [
+            "Melodic"
+          ]
+        },
+        "bass": [
+          "Warm bass"
+        ],
+        "drums": [
+          "Soft live drums"
+        ],
+        "instrumentation": [
+          "Acoustic guitar",
+          "Ambient pads"
+        ],
+        "production": [
+          "Organic",
+          "Spacious"
+        ],
+        "mix": [
+          "Vocal-forward"
+        ]
+      },
+      "expected": {
+        "resolved": {
+          "blend": [
+            {
+              "id": "indie-folk",
+              "weight": 70,
+              "genre": {
+                "id": "indie-folk",
+                "name": "Indie folk",
+                "family": "Folk",
+                "descriptors": [
+                  "intimate acoustic storytelling",
+                  "fingerpicked acoustic guitar",
+                  "organic percussion"
+                ],
+                "bpm": [
+                  75,
+                  115
+                ]
+              }
+            },
+            {
+              "id": "dream-pop",
+              "weight": 30,
+              "genre": {
+                "id": "dream-pop",
+                "name": "Dream pop",
+                "family": "Pop",
+                "descriptors": [
+                  "hazy dream-pop atmosphere",
+                  "shimmering guitar textures",
+                  "soft ambient pads"
+                ],
+                "bpm": [
+                  80,
+                  120
+                ]
+              }
+            }
+          ],
+          "descriptors": [
+            "intimate acoustic storytelling",
+            "fingerpicked acoustic guitar",
+            "shimmering guitar textures"
+          ],
+          "moods": [
+            "Reflective",
+            "Hopeful"
+          ],
+          "warnings": []
+        },
+        "prompts": {
+          "Compact": "Indie folk with dream pop influences. reflective, hopeful mood, 92 BPM, steady 4/4. intimate acoustic storytelling, fingerpicked acoustic guitar, shimmering guitar textures, ambient pads, soft live drums, warm bass. mid-range, airy, warm, melodic, lead vocals. organic, spacious, vocal-forward production.",
+          "Detailed": "STYLE\nindie folk with dream pop influences. intimate acoustic storytelling; fingerpicked acoustic guitar; shimmering guitar textures.\n\nFEEL & RHYTHM\nReflective, Hopeful. 92 BPM, Steady 4/4.\n\nVOICE\nmid-range, airy, warm, melodic, lead.\n\nARRANGEMENT\nintimate acoustic storytelling, fingerpicked acoustic guitar, shimmering guitar textures, ambient pads, soft live drums, warm bass.\n\nPRODUCTION\norganic, spacious, vocal-forward.",
+          "Annotated": "STYLE\nindie folk with dream pop influences. intimate acoustic storytelling; fingerpicked acoustic guitar; shimmering guitar textures.\n\nFEEL & RHYTHM\nReflective, Hopeful. 92 BPM, Steady 4/4.\n\nVOICE\nmid-range, airy, warm, melodic, lead.\n\nARRANGEMENT\nintimate acoustic storytelling, fingerpicked acoustic guitar, shimmering guitar textures, ambient pads, soft live drums, warm bass.\n\nPRODUCTION\norganic, spacious, vocal-forward.\n\nBLUEPRINT NOTES\nSeed: 2408. Blend: Indie folk 70% / Dream pop 30%.\nNo style conflicts detected."
+        }
+      }
+    },
+    {
+      "id": "conflicts-and-unknown-genre",
+      "seed": 17,
+      "style": {
+        "genres": [
+          {
+            "id": "unavailable",
+            "weight": 900
+          },
+          {
+            "id": "indie-folk",
+            "weight": 7
+          },
+          {
+            "id": "dream-pop",
+            "weight": 3
+          }
+        ],
+        "moods": [
+          {
+            "id": "Hopeful",
+            "weight": 1
+          },
+          {
+            "id": "Dark",
+            "weight": 1
+          }
+        ],
+        "bpm": 180,
+        "rhythm": "Steady 4/4",
+        "voice": {
+          "type": "Lead",
+          "register": "Mid-range",
+          "texture": [
+            "Airy",
+            "Warm"
+          ],
+          "delivery": [
+            "Melodic"
+          ]
+        },
+        "bass": [
+          "Warm bass"
+        ],
+        "drums": [
+          "Soft live drums"
+        ],
+        "instrumentation": [
+          "Acoustic guitar",
+          "Ambient pads"
+        ],
+        "production": [
+          "Raw",
+          "Polished",
+          "Minimal",
+          "Layered"
+        ],
+        "mix": [
+          "Vocal-forward"
+        ]
+      },
+      "expected": {
+        "resolved": {
+          "blend": [
+            {
+              "id": "indie-folk",
+              "weight": 70,
+              "genre": {
+                "id": "indie-folk",
+                "name": "Indie folk",
+                "family": "Folk",
+                "descriptors": [
+                  "intimate acoustic storytelling",
+                  "fingerpicked acoustic guitar",
+                  "organic percussion"
+                ],
+                "bpm": [
+                  75,
+                  115
+                ]
+              }
+            },
+            {
+              "id": "dream-pop",
+              "weight": 30,
+              "genre": {
+                "id": "dream-pop",
+                "name": "Dream pop",
+                "family": "Pop",
+                "descriptors": [
+                  "hazy dream-pop atmosphere",
+                  "shimmering guitar textures",
+                  "soft ambient pads"
+                ],
+                "bpm": [
+                  80,
+                  120
+                ]
+              }
+            }
+          ],
+          "descriptors": [
+            "intimate acoustic storytelling",
+            "organic percussion",
+            "shimmering guitar textures"
+          ],
+          "moods": [
+            "Dark",
+            "Hopeful"
+          ],
+          "warnings": [
+            "180 BPM is outside the usual indie folk range. This can be an intentional choice.",
+            "Hopeful and dark create an emotional contrast. Keep it intentional.",
+            "Raw and polished production pull in different directions. Choose one or use them in different sections.",
+            "Minimal and layered arrangements conflict; consider a sparse verse and fuller chorus."
+          ]
+        },
+        "prompts": {
+          "Compact": "Indie folk with dream pop influences. dark, hopeful mood, 180 BPM, steady 4/4. intimate acoustic storytelling, organic percussion, shimmering guitar textures, acoustic guitar, ambient pads, soft live drums, warm bass. mid-range, airy, warm, melodic, lead vocals. raw, polished, minimal, layered, vocal-forward production.",
+          "Detailed": "STYLE\nindie folk with dream pop influences. intimate acoustic storytelling; organic percussion; shimmering guitar textures.\n\nFEEL & RHYTHM\nDark, Hopeful. 180 BPM, Steady 4/4.\n\nVOICE\nmid-range, airy, warm, melodic, lead.\n\nARRANGEMENT\nintimate acoustic storytelling, organic percussion, shimmering guitar textures, acoustic guitar, ambient pads, soft live drums, warm bass.\n\nPRODUCTION\nraw, polished, minimal, layered, vocal-forward.",
+          "Annotated": "STYLE\nindie folk with dream pop influences. intimate acoustic storytelling; organic percussion; shimmering guitar textures.\n\nFEEL & RHYTHM\nDark, Hopeful. 180 BPM, Steady 4/4.\n\nVOICE\nmid-range, airy, warm, melodic, lead.\n\nARRANGEMENT\nintimate acoustic storytelling, organic percussion, shimmering guitar textures, acoustic guitar, ambient pads, soft live drums, warm bass.\n\nPRODUCTION\nraw, polished, minimal, layered, vocal-forward.\n\nBLUEPRINT NOTES\nSeed: 17. Blend: Indie folk 70% / Dream pop 30%.\n180 BPM is outside the usual indie folk range. This can be an intentional choice.\nHopeful and dark create an emotional contrast. Keep it intentional.\nRaw and polished production pull in different directions. Choose one or use them in different sections.\nMinimal and layered arrangements conflict; consider a sparse verse and fuller chorus."
+        }
+      }
+    },
+    {
+      "id": "empty-foundation",
+      "seed": 0,
+      "style": {
+        "genres": [],
+        "moods": [],
+        "bpm": 30,
+        "rhythm": "Steady 4/4",
+        "voice": {
+          "type": "Lead",
+          "register": "Mid-range",
+          "texture": [
+            "Airy",
+            "Warm"
+          ],
+          "delivery": [
+            "Melodic"
+          ]
+        },
+        "bass": [
+          "Warm bass"
+        ],
+        "drums": [
+          "Soft live drums"
+        ],
+        "instrumentation": [
+          "Acoustic guitar",
+          "Ambient pads"
+        ],
+        "production": [
+          "Organic",
+          "Spacious"
+        ],
+        "mix": [
+          "Vocal-forward"
+        ]
+      },
+      "expected": {
+        "resolved": {
+          "blend": [],
+          "descriptors": [],
+          "moods": [],
+          "warnings": [
+            "Choose at least one genre to give your sound a foundation.",
+            "Tempo should be between 40 and 240 BPM."
+          ]
+        },
+        "prompts": {
+          "Compact": "Genre-neutral. Balanced mood, 30 BPM, steady 4/4. acoustic guitar, ambient pads, soft live drums, warm bass. mid-range, airy, warm, melodic, lead vocals. organic, spacious, vocal-forward production.",
+          "Detailed": "STYLE\nGenre-neutral. .\n\nFEEL & RHYTHM\n. 30 BPM, Steady 4/4.\n\nVOICE\nmid-range, airy, warm, melodic, lead.\n\nARRANGEMENT\nacoustic guitar, ambient pads, soft live drums, warm bass.\n\nPRODUCTION\norganic, spacious, vocal-forward.",
+          "Annotated": "STYLE\nGenre-neutral. .\n\nFEEL & RHYTHM\n. 30 BPM, Steady 4/4.\n\nVOICE\nmid-range, airy, warm, melodic, lead.\n\nARRANGEMENT\nacoustic guitar, ambient pads, soft live drums, warm bass.\n\nPRODUCTION\norganic, spacious, vocal-forward.\n\nBLUEPRINT NOTES\nSeed: 0. Blend: .\nChoose at least one genre to give your sound a foundation.\nTempo should be between 40 and 240 BPM."
+        }
+      }
+    }
+  ],
+  "hooks": [
+    {
+      "archetype": "title-drop",
+      "seed": 2408,
+      "section": {
+        "id": "hook-candidate",
+        "type": "chorus",
+        "name": "Chorus",
+        "purpose": "Express the central idea",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Melodic",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-generated-1",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-2",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-3",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-4",
+            "text": "",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-generated-1",
+          "text": "I do not need the answer just to know",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-2",
+          "text": "Copper Compass, I am learning to move slow",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-3",
+          "text": "Copper Compass, I follow where you go",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-4",
+          "text": "A little copper compass, a little room to grow",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    },
+    {
+      "archetype": "refrain",
+      "seed": 2481,
+      "section": {
+        "id": "hook-candidate",
+        "type": "chorus",
+        "name": "Chorus",
+        "purpose": "Express the central idea",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Melodic",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-generated-1",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-2",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-3",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-4",
+            "text": "",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-generated-1",
+          "text": "And carry what I choose to leave behind",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-2",
+          "text": "I follow the copper compass, soft and slow",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-3",
+          "text": "The fading map holds a place for what I find",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-4",
+          "text": "I follow the copper compass where I go",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    },
+    {
+      "archetype": "statement",
+      "seed": 2554,
+      "section": {
+        "id": "hook-candidate",
+        "type": "chorus",
+        "name": "Chorus",
+        "purpose": "Express the central idea",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Melodic",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-generated-1",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-2",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-3",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-4",
+            "text": "",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-generated-1",
+          "text": "Copper Compass, I leave some room to grow",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-2",
+          "text": "I can be uncertain and still go",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-3",
+          "text": "I can be uncertain and still go",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-4",
+          "text": "The fading map reminds me what I know",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    }
+  ],
+  "verses": [
+    {
+      "id": "finding-first-melodic",
+      "seed": 19,
+      "language": {
+        "theme": "Finding your way",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "section": {
+        "id": "legacy-generated-verse",
+        "type": "verse",
+        "name": "Verse 1",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Melodic",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-generated-1",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-2",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-3",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-4",
+            "text": "",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-generated-1",
+          "text": "The light is not a thing that I can hold",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-2",
+          "text": "But something I can follow as I grow",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-3",
+          "text": "I trace the morning on a fading map",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-4",
+          "text": "The quiet streets are teaching me to slow",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    },
+    {
+      "id": "love-second-conversational",
+      "seed": 20,
+      "language": {
+        "theme": "Love & connection",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "second",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "section": {
+        "id": "legacy-generated-verse",
+        "type": "verse",
+        "name": "Verse 1",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Conversational",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-generated-1",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-2",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-3",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-4",
+            "text": "",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-generated-1",
+          "text": "And every quiet moment finds a voice",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-2",
+          "text": "You leave a coffee cup beside your own",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-3",
+          "text": "The kitchen holds the words we never say",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-4",
+          "text": "Your folded note reminds you You are known",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    },
+    {
+      "id": "letting-third-clipped",
+      "seed": 21,
+      "language": {
+        "theme": "Letting go",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "third",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "section": {
+        "id": "legacy-generated-verse",
+        "type": "verse",
+        "name": "Verse 1",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Short / clipped",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-generated-1",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-2",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-3",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-4",
+            "text": "",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-generated-1",
+          "text": "Looks much smaller in the rain",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-2",
+          "text": "Old key down beside the door",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-3",
+          "text": "A little room inside the pain",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-4",
+          "text": "Never knew to look for before",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    },
+    {
+      "id": "ambition-first-dense",
+      "seed": 22,
+      "language": {
+        "theme": "Ambition & identity",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "section": {
+        "id": "legacy-generated-verse",
+        "type": "verse",
+        "name": "Verse 1",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Dense rhythmic",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-generated-1",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-2",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-3",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-4",
+            "text": "",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-generated-1",
+          "text": "And give the quiet parts of me a berth, with the copper compass beside me",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-2",
+          "text": "I fill a worn notebook before the dawn, with the copper compass beside me",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-3",
+          "text": "The glass towers reflect a borrowed name, with the copper compass beside me",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-4",
+          "text": "I keep my work boots steady moving on, with the copper compass beside me",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    },
+    {
+      "id": "home-third-dense-legacy-me-suffix",
+      "seed": 23,
+      "language": {
+        "theme": "Home & belonging",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "third",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "section": {
+        "id": "legacy-generated-verse",
+        "type": "verse",
+        "name": "Verse 1",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Dense rhythmic",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-generated-1",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-2",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-3",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-4",
+            "text": "",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-generated-1",
+          "text": "They are still becoming who They are, with the copper compass beside me",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-2",
+          "text": "But this familiar place can hold them too, with the copper compass beside me",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-3",
+          "text": "They set their coat beside the garden gate, with the copper compass beside me",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-4",
+          "text": "The kitchen table keeps a place for them, with the copper compass beside me",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    },
+    {
+      "id": "finding-first-spacious",
+      "seed": 24,
+      "language": {
+        "theme": "Finding your way",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "section": {
+        "id": "legacy-generated-verse",
+        "type": "verse",
+        "name": "Verse 1",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Dragged / spacious",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-generated-1",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-2",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-3",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-4",
+            "text": "",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-generated-1",
+          "text": "A thing that I can hold",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-2",
+          "text": "I can follow as I grow",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-3",
+          "text": "The morning on a fading map",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-generated-4",
+          "text": "Streets are teaching me to slow",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    }
+  ],
+  "replacements": [
+    {
+      "id": "default-preserve-authored-and-locked",
+      "seed": 100,
+      "replaceAuthored": false,
+      "language": {
+        "theme": "Finding your way",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "section": {
+        "id": "legacy-verse-a",
+        "type": "verse",
+        "name": "Verse 1",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Melodic",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-a1",
+            "text": "My handwritten compass points north",
+            "locked": true,
+            "authored": true
+          },
+          {
+            "id": "legacy-a2",
+            "text": "I chose these words myself",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "legacy-a3",
+            "text": "An older procedural draft",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-a4",
+            "text": "Another procedural draft",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-a1",
+          "text": "My handwritten compass points north",
+          "locked": true,
+          "authored": true
+        },
+        {
+          "id": "legacy-a2",
+          "text": "I chose these words myself",
+          "locked": false,
+          "authored": true
+        },
+        {
+          "id": "legacy-a3",
+          "text": "Now every step becomes a way to know",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-a4",
+          "text": "The light is not a thing that I can hold",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    },
+    {
+      "id": "explicit-authored-replacement-still-preserves-lock",
+      "seed": 100,
+      "replaceAuthored": true,
+      "language": {
+        "theme": "Finding your way",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "section": {
+        "id": "legacy-verse-a",
+        "type": "verse",
+        "name": "Verse 1",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Melodic",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-a1",
+            "text": "My handwritten compass points north",
+            "locked": true,
+            "authored": true
+          },
+          {
+            "id": "legacy-a2",
+            "text": "I chose these words myself",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "legacy-a3",
+            "text": "An older procedural draft",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-a4",
+            "text": "Another procedural draft",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-a1",
+          "text": "My handwritten compass points north",
+          "locked": true,
+          "authored": true
+        },
+        {
+          "id": "legacy-a2",
+          "text": "I used to wait for signs along the road",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-a3",
+          "text": "Now every step becomes a way to know",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-a4",
+          "text": "The light is not a thing that I can hold",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    },
+    {
+      "id": "locked-section",
+      "seed": 100,
+      "replaceAuthored": true,
+      "language": {
+        "theme": "Finding your way",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "section": {
+        "id": "legacy-verse-a",
+        "type": "verse",
+        "name": "Verse 1",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Melodic",
+        "locked": true,
+        "lines": [
+          {
+            "id": "legacy-a1",
+            "text": "My handwritten compass points north",
+            "locked": true,
+            "authored": true
+          },
+          {
+            "id": "legacy-a2",
+            "text": "I chose these words myself",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "legacy-a3",
+            "text": "An older procedural draft",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-a4",
+            "text": "Another procedural draft",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-a1",
+          "text": "My handwritten compass points north",
+          "locked": true,
+          "authored": true
+        },
+        {
+          "id": "legacy-a2",
+          "text": "I chose these words myself",
+          "locked": false,
+          "authored": true
+        },
+        {
+          "id": "legacy-a3",
+          "text": "An older procedural draft",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-a4",
+          "text": "Another procedural draft",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    },
+    {
+      "id": "zero-candidates-preserve-entire-array",
+      "seed": 100,
+      "replaceAuthored": true,
+      "language": {
+        "theme": "Finding your way",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "I, The, And, Now, But",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "section": {
+        "id": "legacy-verse-a",
+        "type": "verse",
+        "name": "Verse 1",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Melodic",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-a1",
+            "text": "My handwritten compass points north",
+            "locked": true,
+            "authored": true
+          },
+          {
+            "id": "legacy-a2",
+            "text": "I chose these words myself",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "legacy-a3",
+            "text": "An older procedural draft",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-a4",
+            "text": "Another procedural draft",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "expected": [
+        {
+          "id": "legacy-a1",
+          "text": "My handwritten compass points north",
+          "locked": true,
+          "authored": true
+        },
+        {
+          "id": "legacy-a2",
+          "text": "I chose these words myself",
+          "locked": false,
+          "authored": true
+        },
+        {
+          "id": "legacy-a3",
+          "text": "An older procedural draft",
+          "locked": false,
+          "authored": false
+        },
+        {
+          "id": "legacy-a4",
+          "text": "Another procedural draft",
+          "locked": false,
+          "authored": false
+        }
+      ]
+    }
+  ],
+  "analyses": [
+    {
+      "id": "manual-warnings",
+      "section": {
+        "id": "legacy-manual",
+        "type": "verse",
+        "name": "Manual verse",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Melodic",
+        "locked": false,
+        "lines": [
+          {
+            "id": "manual-1",
+            "text": "Morning morning morning light",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "manual-2",
+            "text": "I let the broken wings go",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "manual-3",
+            "text": "I wait beside the night",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "manual-4",
+            "text": "I carry the faded coat",
+            "locked": false,
+            "authored": true
+          }
+        ]
+      },
+      "language": {
+        "theme": "Finding your way",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "expected": {
+        "counts": [
+          7,
+          7,
+          6,
+          6
+        ],
+        "scheme": "ABAC",
+        "keys": [
+          "known-0",
+          "known-1",
+          "known-0",
+          "known-13"
+        ],
+        "warnings": [
+          {
+            "id": "manual-2:banned:broken wings",
+            "text": "Line 2 includes the avoided phrase “broken wings”.",
+            "lineId": "manual-2"
+          },
+          {
+            "id": "manual-3:meter",
+            "text": "Line 3 has about 6 syllables; melodic delivery usually fits 7–11.",
+            "lineId": "manual-3"
+          },
+          {
+            "id": "manual-4:meter",
+            "text": "Line 4 has about 6 syllables; melodic delivery usually fits 7–11.",
+            "lineId": "manual-4"
+          },
+          {
+            "id": "legacy-manual:rhyme",
+            "text": "The estimated rhyme pattern is ABAC; your target is ABAB. Slant rhymes may be missed.",
+            "lineId": ""
+          },
+          {
+            "id": "legacy-manual:repeat",
+            "text": "Repeated words: morning. Check whether the repetition is intentional.",
+            "lineId": ""
+          }
+        ],
+        "range": [
+          7,
+          11
+        ]
+      }
+    },
+    {
+      "id": "legacy-preset-overrides-custom-range",
+      "section": {
+        "id": "legacy-manual",
+        "type": "verse",
+        "name": "Manual verse",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          1,
+          2
+        ],
+        "delivery": "Melodic",
+        "locked": false,
+        "lines": [
+          {
+            "id": "manual-1",
+            "text": "Morning morning morning light",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "manual-2",
+            "text": "I let the broken wings go",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "manual-3",
+            "text": "I wait beside the night",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "manual-4",
+            "text": "I carry the faded coat",
+            "locked": false,
+            "authored": true
+          }
+        ]
+      },
+      "language": {
+        "theme": "Finding your way",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "expected": {
+        "counts": [
+          7,
+          7,
+          6,
+          6
+        ],
+        "scheme": "ABAC",
+        "keys": [
+          "known-0",
+          "known-1",
+          "known-0",
+          "known-13"
+        ],
+        "warnings": [
+          {
+            "id": "manual-2:banned:broken wings",
+            "text": "Line 2 includes the avoided phrase “broken wings”.",
+            "lineId": "manual-2"
+          },
+          {
+            "id": "manual-3:meter",
+            "text": "Line 3 has about 6 syllables; melodic delivery usually fits 7–11.",
+            "lineId": "manual-3"
+          },
+          {
+            "id": "manual-4:meter",
+            "text": "Line 4 has about 6 syllables; melodic delivery usually fits 7–11.",
+            "lineId": "manual-4"
+          },
+          {
+            "id": "legacy-manual:rhyme",
+            "text": "The estimated rhyme pattern is ABAC; your target is ABAB. Slant rhymes may be missed.",
+            "lineId": ""
+          },
+          {
+            "id": "legacy-manual:repeat",
+            "text": "Repeated words: morning. Check whether the repetition is intentional.",
+            "lineId": ""
+          }
+        ],
+        "range": [
+          7,
+          11
+        ]
+      }
+    },
+    {
+      "id": "custom-delivery-uses-section-range",
+      "section": {
+        "id": "legacy-manual",
+        "type": "verse",
+        "name": "Manual verse",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          1,
+          2
+        ],
+        "delivery": "Unlisted delivery",
+        "locked": false,
+        "lines": [
+          {
+            "id": "manual-1",
+            "text": "Morning morning morning light",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "manual-2",
+            "text": "I let the broken wings go",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "manual-3",
+            "text": "I wait beside the night",
+            "locked": false,
+            "authored": true
+          },
+          {
+            "id": "manual-4",
+            "text": "I carry the faded coat",
+            "locked": false,
+            "authored": true
+          }
+        ]
+      },
+      "language": {
+        "theme": "Finding your way",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "expected": {
+        "counts": [
+          7,
+          7,
+          6,
+          6
+        ],
+        "scheme": "ABAC",
+        "keys": [
+          "known-0",
+          "known-1",
+          "known-0",
+          "known-13"
+        ],
+        "warnings": [
+          {
+            "id": "manual-1:meter",
+            "text": "Line 1 has about 7 syllables; unlisted delivery delivery usually fits 1–2.",
+            "lineId": "manual-1"
+          },
+          {
+            "id": "manual-2:meter",
+            "text": "Line 2 has about 7 syllables; unlisted delivery delivery usually fits 1–2.",
+            "lineId": "manual-2"
+          },
+          {
+            "id": "manual-2:banned:broken wings",
+            "text": "Line 2 includes the avoided phrase “broken wings”.",
+            "lineId": "manual-2"
+          },
+          {
+            "id": "manual-3:meter",
+            "text": "Line 3 has about 6 syllables; unlisted delivery delivery usually fits 1–2.",
+            "lineId": "manual-3"
+          },
+          {
+            "id": "manual-4:meter",
+            "text": "Line 4 has about 6 syllables; unlisted delivery delivery usually fits 1–2.",
+            "lineId": "manual-4"
+          },
+          {
+            "id": "legacy-manual:rhyme",
+            "text": "The estimated rhyme pattern is ABAC; your target is ABAB. Slant rhymes may be missed.",
+            "lineId": ""
+          },
+          {
+            "id": "legacy-manual:repeat",
+            "text": "Repeated words: morning. Check whether the repetition is intentional.",
+            "lineId": ""
+          }
+        ],
+        "range": [
+          1,
+          2
+        ]
+      }
+    },
+    {
+      "id": "empty-lines",
+      "section": {
+        "id": "legacy-generated-verse",
+        "type": "verse",
+        "name": "Verse 1",
+        "purpose": "Establish the journey",
+        "intensity": 40,
+        "rhymeScheme": "ABAB",
+        "syllableRange": [
+          8,
+          12
+        ],
+        "delivery": "Melodic",
+        "locked": false,
+        "lines": [
+          {
+            "id": "legacy-generated-1",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-2",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-3",
+            "text": "",
+            "locked": false,
+            "authored": false
+          },
+          {
+            "id": "legacy-generated-4",
+            "text": "",
+            "locked": false,
+            "authored": false
+          }
+        ]
+      },
+      "language": {
+        "theme": "Finding your way",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "expected": {
+        "counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "scheme": "––––",
+        "keys": [
+          "",
+          "",
+          "",
+          ""
+        ],
+        "warnings": [
+          {
+            "id": "legacy-generated-verse:rhyme",
+            "text": "The estimated rhyme pattern is ––––; your target is ABAB. Slant rhymes may be missed.",
+            "lineId": ""
+          }
+        ],
+        "range": [
+          7,
+          11
+        ]
+      }
+    }
+  ],
+  "syllables": [
+    {
+      "text": "",
+      "expected": 0
+    },
+    {
+      "text": "Quiet people",
+      "expected": 4
+    },
+    {
+      "text": "Every little poem",
+      "expected": 6
+    },
+    {
+      "text": "Fire and light",
+      "expected": 3
+    },
+    {
+      "text": "Poetry, rhythm, memories",
+      "expected": 8
+    },
+    {
+      "text": "I walk the road",
+      "expected": 4
+    },
+    {
+      "text": "We're going to the shoreline",
+      "expected": 7
+    }
+  ],
+  "rhymes": [
+    {
+      "text": "Carry the LIGHT!",
+      "expected": "known-0"
+    },
+    {
+      "text": "Into the night.",
+      "expected": "known-0"
+    },
+    {
+      "text": "We go",
+      "expected": "known-1"
+    },
+    {
+      "text": "I grow",
+      "expected": "known-1"
+    },
+    {
+      "text": "A faded coat",
+      "expected": "known-13"
+    },
+    {
+      "text": "I wrote a note",
+      "expected": "known-13"
+    },
+    {
+      "text": "A window frame",
+      "expected": "known-7"
+    },
+    {
+      "text": "The borrowed name",
+      "expected": "known-7"
+    },
+    {
+      "text": "A quiet orange",
+      "expected": "e"
+    },
+    {
+      "text": "",
+      "expected": ""
+    }
+  ],
+  "dialects": [
+    {
+      "pack": "British English",
+      "text": "I am going to the apartment elevator by the sidewalk downtown",
+      "outputs": [
+        {
+          "strength": 1,
+          "text": "I am going to the apartment elevator by the sidewalk downtown"
+        },
+        {
+          "strength": 2,
+          "text": "I am going to the flat lift by the pavement the town centre"
+        },
+        {
+          "strength": 3,
+          "text": "I am going to the flat lift by the pavement the town centre"
+        },
+        {
+          "strength": 4,
+          "text": "I am gonna the flat lift by the pavement the town centre"
+        },
+        {
+          "strength": 5,
+          "text": "I am gonna the flat lift by the pavement the town centre"
+        }
+      ]
+    },
+    {
+      "pack": "American English",
+      "text": "I am going to the flat by the pavement lift",
+      "outputs": [
+        {
+          "strength": 1,
+          "text": "I am going to the flat by the pavement lift"
+        },
+        {
+          "strength": 2,
+          "text": "I am going to the apartment by the sidewalk elevator"
+        },
+        {
+          "strength": 3,
+          "text": "I am going to the apartment by the sidewalk elevator"
+        },
+        {
+          "strength": 4,
+          "text": "I am gonna the apartment by the sidewalk elevator"
+        },
+        {
+          "strength": 5,
+          "text": "I am gonna the apartment by the sidewalk elevator"
+        }
+      ]
+    },
+    {
+      "pack": "Standard",
+      "text": "I am going to the apartment elevator by the sidewalk downtown",
+      "outputs": [
+        {
+          "strength": 1,
+          "text": "I am going to the apartment elevator by the sidewalk downtown"
+        },
+        {
+          "strength": 2,
+          "text": "I am going to the apartment elevator by the sidewalk downtown"
+        },
+        {
+          "strength": 3,
+          "text": "I am going to the apartment elevator by the sidewalk downtown"
+        },
+        {
+          "strength": 4,
+          "text": "I am going to the apartment elevator by the sidewalk downtown"
+        },
+        {
+          "strength": 5,
+          "text": "I am going to the apartment elevator by the sidewalk downtown"
+        }
+      ]
+    }
+  ],
+  "serialization": {
+    "expectedProject": {
+      "schemaVersion": 1,
+      "app": "LyricLab",
+      "id": "legacy-project-a",
+      "title": "Copper Compass",
+      "concept": "Choose a direction without pretending to know the destination.",
+      "seed": 2408,
+      "style": {
+        "genres": [
+          {
+            "id": "indie-folk",
+            "weight": 7
+          },
+          {
+            "id": "dream-pop",
+            "weight": 3
+          }
+        ],
+        "moods": [
+          {
+            "id": "Reflective",
+            "weight": 6
+          },
+          {
+            "id": "Hopeful",
+            "weight": 4
+          }
+        ],
+        "bpm": 92,
+        "rhythm": "Steady 4/4",
+        "voice": {
+          "type": "Lead",
+          "register": "Mid-range",
+          "texture": [
+            "Airy",
+            "Warm"
+          ],
+          "delivery": [
+            "Melodic"
+          ]
+        },
+        "bass": [
+          "Warm bass"
+        ],
+        "drums": [
+          "Soft live drums"
+        ],
+        "instrumentation": [
+          "Acoustic guitar",
+          "Ambient pads"
+        ],
+        "production": [
+          "Organic",
+          "Spacious"
+        ],
+        "mix": [
+          "Vocal-forward"
+        ]
+      },
+      "language": {
+        "theme": "Finding your way",
+        "secondaryTheme": "Home & belonging",
+        "perspective": "first",
+        "register": "Poetic",
+        "motif": "copper compass",
+        "preferred": "sunlight, rivers, open roads",
+        "avoided": "broken wings, chasing dreams",
+        "dialect": "Standard",
+        "dialectStrength": 1
+      },
+      "structure": [
+        {
+          "id": "legacy-verse-a",
+          "type": "verse",
+          "name": "Verse 1",
+          "purpose": "Establish the journey",
+          "intensity": 40,
+          "rhymeScheme": "ABAB",
+          "syllableRange": [
+            8,
+            12
+          ],
+          "delivery": "Melodic",
+          "locked": false,
+          "lines": [
+            {
+              "id": "legacy-a1",
+              "text": "My handwritten compass points north",
+              "locked": true,
+              "authored": true
+            },
+            {
+              "id": "legacy-a2",
+              "text": "I chose these words myself",
+              "locked": false,
+              "authored": true
+            },
+            {
+              "id": "legacy-a3",
+              "text": "An older procedural draft",
+              "locked": false,
+              "authored": false
+            },
+            {
+              "id": "legacy-a4",
+              "text": "Another procedural draft",
+              "locked": false,
+              "authored": false
+            }
+          ]
+        }
+      ],
+      "settings": {
+        "ignoredWarnings": [
+          "legacy-a1:meter"
+        ]
+      },
+      "updatedAt": "2026-10-07T12:00:00.000Z"
+    },
+    "expectedJSON": "{\"schemaVersion\":1,\"app\":\"LyricLab\",\"id\":\"legacy-project-a\",\"title\":\"Copper Compass\",\"concept\":\"Choose a direction without pretending to know the destination.\",\"seed\":2408,\"style\":{\"genres\":[{\"id\":\"indie-folk\",\"weight\":7},{\"id\":\"dream-pop\",\"weight\":3}],\"moods\":[{\"id\":\"Reflective\",\"weight\":6},{\"id\":\"Hopeful\",\"weight\":4}],\"bpm\":92,\"rhythm\":\"Steady 4/4\",\"voice\":{\"type\":\"Lead\",\"register\":\"Mid-range\",\"texture\":[\"Airy\",\"Warm\"],\"delivery\":[\"Melodic\"]},\"bass\":[\"Warm bass\"],\"drums\":[\"Soft live drums\"],\"instrumentation\":[\"Acoustic guitar\",\"Ambient pads\"],\"production\":[\"Organic\",\"Spacious\"],\"mix\":[\"Vocal-forward\"]},\"language\":{\"theme\":\"Finding your way\",\"secondaryTheme\":\"Home & belonging\",\"perspective\":\"first\",\"register\":\"Poetic\",\"motif\":\"copper compass\",\"preferred\":\"sunlight, rivers, open roads\",\"avoided\":\"broken wings, chasing dreams\",\"dialect\":\"Standard\",\"dialectStrength\":1},\"structure\":[{\"id\":\"legacy-verse-a\",\"type\":\"verse\",\"name\":\"Verse 1\",\"purpose\":\"Establish the journey\",\"intensity\":40,\"rhymeScheme\":\"ABAB\",\"syllableRange\":[8,12],\"delivery\":\"Melodic\",\"locked\":false,\"lines\":[{\"id\":\"legacy-a1\",\"text\":\"My handwritten compass points north\",\"locked\":true,\"authored\":true},{\"id\":\"legacy-a2\",\"text\":\"I chose these words myself\",\"locked\":false,\"authored\":true},{\"id\":\"legacy-a3\",\"text\":\"An older procedural draft\",\"locked\":false,\"authored\":false},{\"id\":\"legacy-a4\",\"text\":\"Another procedural draft\",\"locked\":false,\"authored\":false}]}],\"settings\":{\"ignoredWarnings\":[\"legacy-a1:meter\"]},\"updatedAt\":\"2026-10-07T12:00:00.000Z\"}",
+    "plain": "Copper Compass\n\n[Verse 1]\nMy handwritten compass points north\nI chose these words myself\nAn older procedural draft\nAnother procedural draft",
+    "annotated": "Copper Compass\n\n[Verse 1] — Establish the journey\n[Melodic · ABAB · intensity 40%]\nMy handwritten compass points north\nI chose these words myself\nAn older procedural draft\nAnother procedural draft"
+  }
+}

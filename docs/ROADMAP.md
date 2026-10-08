@@ -45,6 +45,10 @@ User choices
 
 React + Vite + TypeScript; client-side only through v1.0. Local declarative modules contain genre, mood, vocal, production, rhyme, imagery, vocabulary, and dialect definitions. LocalStorage is the initial persistence mechanism; IndexedDB is optional if payloads grow. Generation uses seeded pseudo-random selection. `.lyriclab.json` / SongSpec schemas are versioned. Pure domain engines receive unit tests; critical workflows receive browser tests.
 
+## Engine Foundation pause after v0.1
+
+The owner approved the [Engine Foundation architecture pass](ENGINE_FOUNDATION.md), stages A–H, before expanding features/data for v0.2–v0.8. Stage A records target contracts, version policy, and fixed v0.1 behavior fixtures. It makes no runtime, dataset, or format changes. B–H implement and verify the boundaries in sequence; completion of A does not complete the full foundation or later product milestones. See [version/replay policy](ENGINE_VERSIONING.md).
+
 ## Milestones
 
 | Version | Milestone | Outcome | Depends on |
