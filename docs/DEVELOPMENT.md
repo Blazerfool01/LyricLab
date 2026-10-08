@@ -1,13 +1,13 @@
 # Source of truth and development workflow
 
-Canonical repository: https://github.com/Blazerfool01/lyriclab
+Canonical repository: https://github.com/immviolatingskids-cell/LyricLab
 
 GitHub's `main` branch is the accepted source of truth. Workspace directories, ZIP exports, preview builds, and browser-local songs are copies or artifacts. Record lasting code and documentation changes in the repository. Local user song projects are private content and do not belong in this source repository.
 
 ## Start from the repository
 
 ```sh
-git clone https://github.com/Blazerfool01/lyriclab.git
+git clone https://github.com/immviolatingskids-cell/LyricLab.git
 cd lyriclab
 npm ci
 npm run dev
