@@ -48,3 +48,11 @@ export const dialectMaps: Record<string, Record<string, string>> = {
       lift: "elevator",
     },
   };
+
+export const claims: Record<string, string> = {
+    "Finding your way": "I can be uncertain and still go",
+    "Love & connection": "I choose the quiet way we learn to stay",
+    "Letting go": "I can let you go and keep the care",
+    "Ambition & identity": "I get to choose the meaning of my name",
+    "Home & belonging": "I make a home in what I choose to keep",
+  };

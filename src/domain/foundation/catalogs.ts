@@ -1,5 +1,5 @@
 import { genres, palette, cadenceRanges, traitConflicts } from '../data';
-import { exceptions, dialectMaps, rhymeSets } from '../legacy-pack';
+import { exceptions, dialectMaps, rhymeSets, claims } from '../legacy-pack';
 import type { CatalogSnapshot, CatalogView, DialectPack, GenreDefinition, PronunciationEntry, TemplateDefinition, TraitDefinition, VocabularyEntry } from './contracts';
 import { fingerprint } from './randomness';
 
@@ -20,7 +20,7 @@ export function immutableView<T extends { readonly id: string }>(entries: readon
   const ordered = Object.freeze([...index.values()].sort((a,b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   return Object.freeze({ get: (id: string) => index.get(id), all: () => ordered });
 }
-export interface Choice { readonly id: string; readonly label: string; readonly category: string; readonly range?: readonly [number, number] }
+export interface Choice { readonly claim?: string; readonly id: string; readonly label: string; readonly category: string; readonly range?: readonly [number, number] }
 /** Explicit stable identities; labels can change without changing these IDs. */
 const choiceGroups: Record<string, readonly (readonly [string,string])[]> = {
   mood: [['reflective','Reflective'],['hopeful','Hopeful'],['melancholic','Melancholic'],['warm','Warm'],['dreamy','Dreamy'],['energetic','Energetic'],['dark','Dark'],['intimate','Intimate'],['defiant','Defiant'],['nostalgic','Nostalgic']],
@@ -80,3 +80,11 @@ export const catalog = createCatalog();
 export function choiceId(category: string, label: string): string {
   return catalog.choices.all().find(c=>c.category===category && c.label===label)?.id || `unavailable:${category}:${label}`;
 }
+
+/** Additive pack: claims moved out of the legacy algorithm without rewriting base content. */
+const claimMetadata = Object.fromEntries(catalog.choices.all().filter(c=>c.category==='theme').map(c=>[c.id,claims[c.label]]));
+export const generationCatalog: FoundationCatalog = freeze({
+  ...catalog,
+  choices: immutableView(catalog.choices.all().map(c=>claimMetadata[c.id] ? {...c,claim:claimMetadata[c.id]} : c)),
+  packs: [...catalog.packs,{id:'legacy-claims',version:'1.0.0',contentHash:fingerprint(claimMetadata)}],
+});
