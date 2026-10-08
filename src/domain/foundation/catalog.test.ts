@@ -69,7 +69,7 @@ describe('immutable indexed catalogue views', () => {
 describe('existing-pack catalogue snapshot', () => {
   it('pins the existing pack identity, version and content fingerprint', () => {
     expect(catalog.packs).toEqual([{
-      id: 'legacy-v0.1', version: '1.0.0', contentHash: 'fnv1a-v1-e6dd99c5',
+      id: 'legacy-v0.1', version: '1.0.0', contentHash: 'fnv1a-v1-7e737857',
     }]);
   });
 

@@ -1,5 +1,5 @@
 import { genres, palette, cadenceRanges, traitConflicts } from '../data';
-import { exceptions, dialectMaps } from '../legacy-pack';
+import { exceptions, dialectMaps, rhymeSets } from '../legacy-pack';
 import type { CatalogSnapshot, CatalogView, DialectPack, GenreDefinition, PronunciationEntry, TemplateDefinition, TraitDefinition, VocabularyEntry } from './contracts';
 import { fingerprint } from './randomness';
 
@@ -65,7 +65,7 @@ export function createCatalog(): FoundationCatalog {
   for (const [family, lines] of Object.entries(patterns)) lines.forEach((pattern,i) => templates.push({id:`legacy:${family}:${i+1}`,roles:family==='bridge'?['reveal']:['resolve'],archetypes:family==='bridge'?[]:[family as 'title-drop'|'refrain'|'statement'],pattern,slots:pattern.includes('{object}')?{object:'object'}:{},effects:[]}));
   const pronunciations: PronunciationEntry[] = Object.entries(exceptions).map(([token,syllables])=>({id:`pronunciation:${token}`,token,locale:'en',syllables,phonemes:[]}));
   const dialects: DialectPack[] = choiceGroups.dialect.map(([id,label])=>({id:`dialect:${id}`,styleTags:label==='Standard'?[]:[label],rules:[...Object.entries(dialectMaps[label] || {}).map(([source,replacement])=>({id:`${id}:${source}`,kind:'vocabulary' as const,source,replacement,minimumStrength:2 as const})),...(id==='standard'?[]:[{id:`${id}:going-to`,kind:'grammar' as const,source:'going to',replacement:'gonna',minimumStrength:4 as const}])]}));
-  const content = {genres:genreEntries,traits,vocabulary,templates,pronunciations,dialects,choices};
+  const content = {genres:genreEntries,traits,vocabulary,templates,pronunciations,dialects,choices,rhymeSets};
   const snapshot: FoundationCatalog = {
     packs:[{id:'legacy-v0.1',version:'1.0.0',contentHash:fingerprint(content)}],
     genres:immutableView(genreEntries),traits:immutableView(traits),vocabulary:immutableView(vocabulary),templates:immutableView(templates),pronunciations:immutableView(pronunciations),dialects:immutableView(dialects),choices:immutableView(choices),
