@@ -51,6 +51,10 @@ Implement each milestone in this order:
 
 The initial import implements v0.1 plus early tools for later milestones. The full v1.0 release gate remains open. Keep delivered behavior in README.md and planned requirements in ROADMAP.md. Schema version 1 is the current implementation format, not yet a frozen cross-application interoperability contract.
 
+## Engine Foundation work
+
+Stages A–H are approved in [ENGINE_FOUNDATION.md](ENGINE_FOUNDATION.md). Stage A adds type-only boundaries and fixed [legacy characterization fixtures](../src/domain/fixtures/README.md). Build compilation includes `src/domain/foundation/contracts.typecheck.ts`; these checks never run in the application. Ordinary `npm test` compares against checked-in expectations without writing them. Intentional algorithm changes require new profile fixtures and compatibility handling, not refreshing old goldens. Keep the stage's scope, checks, and remaining gates visible in the PR. Features and dataset expansion remain paused until the foundation gate passes.
+
 ## Architecture boundaries
 
 Keep domain engines in `src/domain/`, separate from React. Treat compiled style prompts and analysis as derived output. Changes to persisted structure need validation and migration planning. Do not silently overwrite authored or locked lyrics. Keep warnings explainable and dismissible. Keep language/dialect packs declarative and testable.

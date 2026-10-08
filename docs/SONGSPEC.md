@@ -33,6 +33,10 @@ Browser storage key: `lyriclab.projects.v1`. Active project key: `lyriclab.activ
 
 Compiled style prompts and analysis results are not persisted. They are reconstructed from the saved blueprint and explicit seed. The generator algorithms and declarative data version must remain stable for historical reproducibility; future changes need fixtures and a migration/versioning strategy.
 
+## Approved future separation
+
+[Engine Foundation Stage G](ENGINE_FOUNDATION.md) will introduce explicit project migration and SongSpec projection. Stage A supplies only target interfaces and [version policy](ENGINE_VERSIONING.md). It does not activate them, change schemaVersion, or remove fields from existing exports. Current v1 compatibility remains covered by fixed characterization fixtures. Portable intent and lyrics will be separated from local editor state and executable replay records before the interchange freeze.
+
 ## Boundaries
 
 No runtime dependency on SonicStudio, Suno, Udio, GitHub, or an AI provider. Shared-format integration comes after a documented, tested schema freeze. Richer language and dialect metadata and migration infrastructure remain part of the roadmap.

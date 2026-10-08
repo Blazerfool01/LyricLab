@@ -7,6 +7,8 @@ A standalone, client-only songwriting studio built with React, Vite, and TypeScr
 [Blazerfool01/LyricLab](https://github.com/Blazerfool01/LyricLab) is the source of truth for code, tests, and documentation. The `main` branch holds the accepted baseline. Future changes should arrive through branches and pull requests with the checks below.
 
 - [Product principles and milestone roadmap](docs/ROADMAP.md)
+- [Approved Engine Foundation architecture (A–H)](docs/ENGINE_FOUNDATION.md)
+- [Engine version and replay policy](docs/ENGINE_VERSIONING.md)
 - [Development and contribution workflow](docs/DEVELOPMENT.md)
 - [Current portable project / SongSpec format](docs/SONGSPEC.md)
 - [Guidance for coding agents](AGENTS.md)
@@ -75,6 +77,6 @@ npm run build
 npm run test:ui
 ```
 
-UI tests use the production preview on port 4173 and Playwright Chromium. On first setup, run `npx playwright install --with-deps chromium`. To use an existing system browser instead, run `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium npm run test:ui`. Tests cover style updates, locked/manual edits, save and reopen, hook insertion, JSON export and re-import, and network-disabled reopening. Reference screenshots are in `docs/images/`. GitHub Actions runs the domain tests, production build, and browser suite on pushes to `main` and on pull requests. The initial verified baseline contains 40 domain tests and 7 browser tests.
+UI tests use the production preview on port 4173 and Playwright Chromium. On first setup, run `npx playwright install --with-deps chromium`. To use an existing system browser instead, run `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium npm run test:ui`. Tests cover style updates, locked/manual edits, save and reopen, hook insertion, JSON export and re-import, and network-disabled reopening. Reference screenshots are in `docs/images/`. GitHub Actions runs the domain tests, production build, and browser suite on pushes to `main` and on pull requests. The v0.1 baseline contains 40 domain tests and 7 browser tests. Engine Foundation Stage A adds 25 fixed characterization tests and compile-time contract checks; it does not change runtime behavior.
 
 Text fields have their native undo behavior. The toolbar undo / redo tracks project editing actions. `Ctrl/Cmd+S` exports a complete project backup; `Escape` dismisses dialogs.
