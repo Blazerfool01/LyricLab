@@ -1,6 +1,6 @@
 # Engine Foundation architecture
 
-Status: A–H approved by the project owner. This document records the agreed architecture. Stage A adds type-only contracts and fixed v0.1 characterization fixtures. Stages B–H remain implementation work; their behavior is not active merely because a target interface exists.
+Status: A–H approved by the project owner. This document records the agreed architecture. Stages A–B provide contracts, fixed v0.1 characterization fixtures, immutable catalogs, and named streams. Stages C–H remain implementation work; their behavior is not active merely because a target interface exists.
 
 Read this together with [ENGINE_VERSIONING.md](ENGINE_VERSIONING.md), [the product roadmap](ROADMAP.md), and [current SongSpec documentation](SONGSPEC.md).
 
@@ -137,10 +137,10 @@ Characterize the current behavior first. Keep current entry points as facades. E
 
 ## 12. Approved implementation sequence
 
-| Stage | Deliverable | Stage A status |
+| Stage | Deliverable | Status |
 | --- | --- | --- |
-| A | Approved contracts, version policy, fixed characterization fixtures | Implemented on this branch; gate below |
-| B | Typed existing packs, indexed snapshots, named streams | Approved, pending |
+| A | Approved contracts, version policy, fixed characterization fixtures | Merged PR #1; gate below |
+| B | Typed existing packs, indexed snapshots, named streams | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
 | C | Independent analyzers, shared diagnostics, hard/soft evaluation | Approved, pending |
 | D | Common protection/application, atomic/stale patches | Approved, pending |
 | E | Legacy composer adapter, bounded attempts, ranking/exhaustion | Approved, pending |
