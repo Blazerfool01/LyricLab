@@ -1,0 +1,54 @@
+name: LyricLab checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lyriclab-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Domain, build, and offline studio
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Test domain engines
+        run: npm test
+      - name: Build production app
+        run: npm run build
+      - name: Install browser for workflow tests
+        run: npx playwright install --with-deps chromium
+      - name: Test studio and network-disabled operation
+        run: npm run test:ui
+      - name: Preserve browser diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-diagnostics
+          path: test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+      - name: Package verified offline build
+        uses: actions/upload-artifact@v4
+        with:
+          name: lyriclab-offline-build
+          path: |
+            dist/
+            licenses/
+            README.md
+          retention-days: 30
