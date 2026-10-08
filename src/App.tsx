@@ -49,23 +49,40 @@ import {
   textures,
   themes,
 } from "./domain/data";
-import {
-  analyzeSection,
-  compileStyle,
-  dialectPreview,
-  generateLines,
-  resolveStyle,
-} from "./domain/engines";
+import { resolveStyle } from "./domain/engines";
 import {
   download,
   exampleProject,
   lyricsText,
   makeSection,
-  readProjects,
+  readStudioProjects,
+  serializeStudioLibrary,
+  freshStudioProject,
   STORAGE_KEY,
   uid,
-  validateProject,
 } from "./domain/project";
+import {
+  regenerateProject,
+  analyzeStudioSection,
+  compileStudioStyle,
+  previewHooks,
+  acceptHook,
+  previewStudioDialect,
+  applyStudioDialect,
+  duplicateStudioSection,
+  setStudioRole,
+} from "./domain/foundation/studio";
+import {
+  toEnvelope,
+  serializeProject,
+  decodeProject,
+  toEditorProject,
+  projectSongSpec,
+  replayRecipe,
+} from "./domain/foundation/persistence";
+import { emptyEngineState } from "./domain/foundation/adapters";
+import { legacyProject } from "./domain/foundation/legacy-export";
+import type { SectionRole } from "./domain/foundation/contracts";
 import type {
   Project,
   PromptFormat,
@@ -76,7 +93,14 @@ import type {
 
 type Tab = "Song canvas" | "Style prompt" | "Hook lab";
 type Panel = "Style" | "Voice" | "Theme" | "Structure" | "Language";
-type Modal = "export" | "projects" | "guide" | "seed" | "dialect" | null;
+type Modal =
+  | "export"
+  | "projects"
+  | "guide"
+  | "seed"
+  | "dialect"
+  | "replay"
+  | null;
 const panelIcons = {
   Style: Music2,
   Voice: Mic2,
@@ -84,7 +108,7 @@ const panelIcons = {
   Structure: AudioLines,
   Language: Globe2,
 };
-const initial = readProjects();
+const initial = readStudioProjects();
 const initialActive = (() => {
   try {
     return localStorage.getItem("lyriclab.active") || initial.projects[0].id;
@@ -117,22 +141,26 @@ function App() {
   const [addMenu, setAddMenu] = useState(false);
   const [mobileBlueprint, setMobileBlueprint] = useState(false);
   const [exportType, setExportType] = useState("project");
-  const [hookSeed, setHookSeed] = useState(0);
+  const [hookSeed, setHookSeed] = useState(
+    project.engineState?.variations["hook-lab"] || 0,
+  );
+  const [replaceAuthored, setReplaceAuthored] = useState(false);
+  const [replayText, setReplayText] = useState("");
   const [dialectApply, setDialectApply] = useState(false);
   const importRef = useRef<HTMLInputElement>(null);
   const current =
     project.structure.find((s) => s.id === selected) || project.structure[0];
   const analysis = useMemo(
-    () => (current ? analyzeSection(current, project.language) : null),
-    [current, project.language],
+    () => (current ? analyzeStudioSection(project, current.id) : null),
+    [current, project],
   );
   const styleResult = useMemo(
     () => resolveStyle(project.style, project.seed),
     [project.style, project.seed],
   );
   const stylePrompt = useMemo(
-    () => compileStyle(project.style, project.seed, format),
-    [project.style, project.seed, format],
+    () => compileStudioStyle(project, format),
+    [project, format],
   );
   const totalLines = project.structure.reduce((n, s) => n + s.lines.length, 0);
   const sectionWarnings =
@@ -180,7 +208,7 @@ function App() {
       setProjects(list);
       if (storageError) return;
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        localStorage.setItem(STORAGE_KEY, serializeStudioLibrary(list));
         localStorage.setItem("lyriclab.active", project.id);
         setSaveStatus("Saved locally");
       } catch {
@@ -258,23 +286,26 @@ function App() {
         : [...list, value],
     });
   }
-  function regenerate(section: SongSection, seed = project.seed) {
-    const lines = generateLines(project, section, seed);
-    const changed = lines.some((l, i) => l.text !== section.lines[i].text);
-    if (!changed) {
+  function regenerate(section: SongSection) {
+    try {
+      const result = regenerateProject(project, section.id);
+      if (result.status === "applied" && "project" in result) {
+        change(result.project);
+        flash(
+          `${section.name} refreshed. Locked and authored lines preserved.`,
+        );
+      } else
+        flash(
+          result.diagnostics.map((issue) => issue.message).join(" ") ||
+            "No eligible draft was found.",
+        );
+    } catch (error) {
       flash(
-        "Locked and authored lines are preserved. Unlock a generated line to change it.",
+        error instanceof Error
+          ? error.message
+          : "Unable to generate this section.",
       );
-      return;
     }
-    change((p) => ({
-      ...p,
-      seed,
-      structure: p.structure.map((s) =>
-        s.id === section.id ? { ...s, lines } : s,
-      ),
-    }));
-    flash(`${section.name} refreshed. Locked and authored lines preserved.`);
   }
   function addSection(type: SectionType) {
     const s = makeSection(
@@ -294,26 +325,51 @@ function App() {
     [items[i], items[i + delta]] = [items[i + delta], items[i]];
     change((p) => ({ ...p, structure: items }));
   }
-  function duplicateSection(s: SongSection) {
-    const copy = {
-      ...s,
-      id: uid(),
-      name: `${s.name} (copy)`,
-      lines: s.lines.map((l) => ({ ...l, id: uid() })),
-    };
-    change((p) => ({
-      ...p,
-      structure: p.structure.flatMap((x) => (x.id === s.id ? [x, copy] : [x])),
-    }));
-    setSelected(copy.id);
+  function duplicateSection(section: SongSection) {
+    try {
+      const id = uid();
+      change(
+        duplicateStudioSection(
+          project,
+          section.id,
+          id,
+          section.lines.map(() => uid()),
+        ),
+      );
+      setSelected(id);
+    } catch (error) {
+      flash(
+        error instanceof Error
+          ? error.message
+          : "Unable to duplicate this section.",
+      );
+    }
+  }
+  function updateRole(role: SectionRole) {
+    if (!current) return;
+    try {
+      change(setStudioRole(project, current.id, role));
+    } catch (error) {
+      flash(
+        error instanceof Error ? error.message : "Unable to update this role.",
+      );
+    }
   }
   function downloadProject() {
-    download(
-      `${project.title || "Untitled"}.lyriclab.json`,
-      JSON.stringify(project, null, 2),
-      "application/json",
-    );
-    flash("Project exported. Your blueprint and lyrics are included.");
+    try {
+      download(
+        `${project.title || "Untitled"}.lyriclab.json`,
+        serializeProject(toEnvelope(project)),
+        "application/json",
+      );
+      flash("Project exported. Your blueprint and lyrics are included.");
+    } catch (error) {
+      flash(
+        error instanceof Error
+          ? error.message
+          : "Unable to export this project.",
+      );
+    }
   }
   async function copy(text: string) {
     try {
@@ -329,6 +385,7 @@ function App() {
       : [...projects, project];
     setProjects(list);
     setProject(p);
+    setHookSeed(p.engineState?.variations["hook-lab"] || 0);
     setPast([]);
     setFuture([]);
     setSelected(p.structure[0]?.id || "");
@@ -339,57 +396,113 @@ function App() {
     p.title = "Untitled song";
     p.concept = "";
     p.structure = [makeSection("verse"), makeSection("chorus")];
-    openProject(p);
+    openProject(freshStudioProject(p));
     flash("A fresh page. Make it yours.");
   }
   async function importProject(file: File) {
     try {
-      const p = validateProject(JSON.parse(await file.text()));
+      const decoded = decodeProject(JSON.parse(await file.text()));
+      if (decoded.status !== "resolved")
+        throw new Error(
+          decoded.diagnostics.map((issue) => issue.message).join(" "),
+        );
+      const p = toEditorProject(decoded.value);
       p.id = uid();
       openProject(p);
-      flash("Project imported and validated.");
+      flash(
+        decoded.diagnostics.map((issue) => issue.message).join(" ") ||
+          "Project imported and validated.",
+      );
     } catch (e) {
       flash(e instanceof Error ? e.message : "Unable to import this file.");
     }
   }
   const hooks = useMemo(
-    () =>
-      Array.from({ length: 3 }, (_, i) => {
-        const section = makeSection("chorus");
-        section.id = "hook-candidate";
-        return generateLines(
-          project,
-          section,
-          project.seed + hookSeed + i * 73,
-          false,
-          (["title-drop", "refrain", "statement"] as const)[i],
-        );
-      }),
-    [project.seed, project.title, project.language, hookSeed],
+    () => (tab === "Hook lab" ? previewHooks(project, hookSeed) : []),
+    [project, hookSeed, tab],
   );
+  const dialectDraft = useMemo(
+    () =>
+      current
+        ? previewStudioDialect(project, current.id, replaceAuthored)
+        : null,
+    [project, current, replaceAuthored],
+  );
+  useEffect(() => {
+    setDialectApply(false);
+  }, [dialectDraft]);
+  function nextHooks() {
+    const variation = hookSeed + 1;
+    setHookSeed(variation);
+    change({
+      ...project,
+      engineState: {
+        ...(project.engineState || emptyEngineState()),
+        variations: {
+          ...project.engineState?.variations,
+          "hook-lab": variation,
+        },
+      },
+    });
+  }
+  function inspectReplay() {
+    const recipe = [...(project.engineState?.recipes || [])]
+      .reverse()
+      .find((record) => record.inputs.sectionId === current?.id);
+    if (!recipe) {
+      flash("This section has no recorded original draft.");
+      return;
+    }
+    const result = replayRecipe(recipe);
+    setReplayText(
+      result.status === "resolved"
+        ? result.value.lines.map((line) => line.text).join("\n")
+        : result.diagnostics.map((issue) => issue.message).join("\n"),
+    );
+    setModal("replay");
+  }
   function exportSelected() {
-    const safeName = project.title || "Untitled";
-    if (exportType === "project" || exportType === "spec")
-      download(
-        `${safeName}.${exportType === "project" ? "lyriclab" : "SongSpec"}.json`,
-        JSON.stringify(project, null, 2),
-        "application/json",
+    try {
+      const safeName = project.title || "Untitled";
+      if (
+        exportType === "project" ||
+        exportType === "spec" ||
+        exportType === "legacy"
+      )
+        download(
+          `${safeName}.${exportType === "project" ? "lyriclab" : exportType === "legacy" ? "legacy-v1" : "SongSpec"}.json`,
+          exportType === "project"
+            ? serializeProject(toEnvelope(project))
+            : JSON.stringify(
+                exportType === "legacy"
+                  ? legacyProject(project)
+                  : projectSongSpec(toEnvelope(project)),
+                null,
+                2,
+              ),
+          "application/json",
+        );
+      else if (exportType === "lyrics" || exportType === "annotated")
+        download(
+          `${safeName}${exportType === "annotated" ? "-annotated" : ""}.txt`,
+          lyricsText(project, exportType === "annotated"),
+        );
+      else
+        download(
+          `${safeName}-style.txt`,
+          compileStudioStyle(
+            project,
+            exportType === "detailed" ? "Detailed" : "Compact",
+          ),
+        );
+      flash("Export downloaded. Ready to take with you.");
+    } catch (error) {
+      flash(
+        error instanceof Error
+          ? error.message
+          : "Unable to export this project.",
       );
-    else if (exportType === "lyrics" || exportType === "annotated")
-      download(
-        `${safeName}${exportType === "annotated" ? "-annotated" : ""}.txt`,
-        lyricsText(project, exportType === "annotated"),
-      );
-    else
-      download(
-        `${safeName}-style.txt`,
-        compileStyle(
-          project.style,
-          project.seed,
-          exportType === "detailed" ? "Detailed" : "Compact",
-        ),
-      );
-    flash("Export downloaded. Ready to take with you.");
+    }
   }
   const blueprintContent = (kind: Panel) => {
     if (kind === "Style")
@@ -403,7 +516,7 @@ function App() {
               <div className="genre-card" key={g.id}>
                 <div className="genre-title">
                   <span className={`genre-dot dot-${i}`} />
-                  <span>{genres.find((x) => x.id === g.id)?.name}</span>
+                  <span>{genres.find((x) => x.id === g.id)?.name || g.id}</span>
                   <button
                     className="tiny-button"
                     title="Remove genre"
@@ -1094,8 +1207,19 @@ function App() {
           {storageError}
           <button
             onClick={() => {
-              downloadProject();
-              setStorageError("");
+              try {
+                const original = localStorage.getItem(STORAGE_KEY);
+                download(
+                  "LyricLab-original-storage.json",
+                  original ?? serializeStudioLibrary(projects),
+                  "application/json",
+                );
+                setStorageError("");
+              } catch {
+                flash(
+                  "Unable to read original storage. Export your active project separately.",
+                );
+              }
             }}
           >
             Export & enable saving
@@ -1244,9 +1368,7 @@ function App() {
                     </button>
                     <button
                       className="generate-button"
-                      onClick={() =>
-                        current && regenerate(current, project.seed + 1)
-                      }
+                      onClick={() => current && regenerate(current)}
                     >
                       <WandSparkles size={14} /> Generate
                     </button>
@@ -1254,7 +1376,7 @@ function App() {
                 </div>
                 <div className="song-sections">
                   {project.structure.map((section, i) => {
-                    const a = analyzeSection(section, project.language);
+                    const a = analyzeStudioSection(project, section.id);
                     const active = current?.id === section.id;
                     return (
                       <article
@@ -1296,10 +1418,7 @@ function App() {
                               aria-label={`Regenerate ${section.name}`}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                regenerate(
-                                  section,
-                                  project.seed + past.length + 1,
-                                );
+                                regenerate(section);
                               }}
                             >
                               <RefreshCw size={14} />
@@ -1467,7 +1586,7 @@ function App() {
                               </button>
                               <span
                                 className="line-syllables"
-                                title="Estimated syllables"
+                                title={`Syllables: ${a.confidence[j] || "unknown"}`}
                               >
                                 {a.counts[j] || "–"}
                               </span>
@@ -1628,15 +1747,12 @@ function App() {
                     <Leaf size={13} />
                     {project.language.theme}
                   </span>
-                  <button
-                    className="outline-button"
-                    onClick={() => setHookSeed((n) => n + 137)}
-                  >
+                  <button className="outline-button" onClick={nextHooks}>
                     <RefreshCw size={13} />
                     New variations
                   </button>
                 </div>
-                {hooks.map((lines, i) => (
+                {hooks.map((preview, i) => (
                   <div className="hook-card" key={i}>
                     <div className="hook-card-header">
                       <span className="field-label">
@@ -1646,26 +1762,47 @@ function App() {
                         {["Title drop", "Refrain", "Central claim"][i]}
                       </span>
                     </div>
-                    {lines.map((l) => (
+                    {preview.lines.map((l) => (
                       <p key={l.id}>{l.text}</p>
                     ))}
+                    {!preview.draft && (
+                      <p className="helper">
+                        {preview.diagnostics
+                          .map((issue) => issue.message)
+                          .join(" ")}
+                      </p>
+                    )}
                     <div className="hook-card-footer">
                       <span>
-                        4 lines · Melodic · Seed{" "}
-                        {project.seed + hookSeed + i * 73}
+                        4 lines · Melodic · Seed {project.seed} · Variation{" "}
+                        {hookSeed}
                       </span>
                       <button
                         className="text-button"
+                        disabled={!preview.draft}
                         onClick={() => {
-                          const s = makeSection("chorus");
-                          s.lines = lines.map((l) => ({ ...l, id: uid() }));
-                          change((p) => ({
-                            ...p,
-                            structure: [...p.structure, s],
-                          }));
-                          setSelected(s.id);
-                          setTab("Song canvas");
-                          flash("Hook added as a new chorus.");
+                          const result = acceptHook(project, preview);
+                          if (
+                            result.status === "applied" &&
+                            "project" in result
+                          ) {
+                            change(result.project);
+                            setHookSeed(
+                              result.project.engineState?.variations[
+                                "hook-lab"
+                              ] || hookSeed,
+                            );
+                            setSelected(
+                              result.project.structure.at(-1)?.id || "",
+                            );
+                            setTab("Song canvas");
+                            flash("Hook added as a new chorus.");
+                          } else
+                            flash(
+                              result.diagnostics
+                                .map((issue) => issue.message)
+                                .join(" "),
+                            );
                         }}
                       >
                         Use this hook
@@ -1762,6 +1899,46 @@ function App() {
                     })
                   }
                 />
+              </div>
+              <div className="inspector-block">
+                <div className="inspector-field">
+                  <span>Section role</span>
+                  <select
+                    aria-label="Section role"
+                    value={
+                      project.engineState?.roles[current.id] ||
+                      (current.type === "chorus" || current.type === "outro"
+                        ? "resolve"
+                        : current.type === "bridge"
+                          ? "reveal"
+                          : current.type === "pre-chorus"
+                            ? "challenge"
+                            : current.type === "intro" ||
+                                current.id ===
+                                  project.structure.find(
+                                    (section) => section.type === "verse",
+                                  )?.id
+                              ? "establish"
+                              : "develop")
+                    }
+                    onChange={(event) =>
+                      updateRole(event.target.value as SectionRole)
+                    }
+                  >
+                    {[
+                      "establish",
+                      "develop",
+                      "challenge",
+                      "reveal",
+                      "resolve",
+                    ].map((role) => (
+                      <option key={role}>{role}</option>
+                    ))}
+                  </select>
+                </div>
+                <button className="text-button" onClick={inspectReplay}>
+                  Verify original draft
+                </button>
               </div>
               <div className="inspector-block rhyme-cadence">
                 <h3>
@@ -1955,7 +2132,9 @@ function App() {
                     ? "Studio guide"
                     : modal === "seed"
                       ? "Project settings"
-                      : "Dialect preview"
+                      : modal === "replay"
+                        ? "Original draft inspection"
+                        : "Dialect preview"
             }
             onClick={(e) => e.stopPropagation()}
           >
@@ -2006,6 +2185,12 @@ function App() {
                       title: "Detailed style prompt",
                       desc: "Your full sound, arrangement, and voice · .txt",
                       Icon: SlidersHorizontal,
+                    },
+                    {
+                      id: "legacy",
+                      title: "Legacy project JSON",
+                      desc: "Compatibility schema v1; no recipes or word locks",
+                      Icon: FileJson,
                     },
                     {
                       id: "spec",
@@ -2089,11 +2274,15 @@ function App() {
                           };
                           setProjects((ps) => [...ps, clone]);
                           try {
-                            localStorage.setItem(
-                              STORAGE_KEY,
-                              JSON.stringify([...projects, clone]),
-                            );
-                          } catch {}
+                            if (!storageError)
+                              localStorage.setItem(
+                                STORAGE_KEY,
+                                serializeStudioLibrary([...projects, clone]),
+                              );
+                          } catch {
+                            setSaveStatus("Save unavailable");
+                            setStorageError("Browser storage is unavailable or full. Export your projects to keep your work.");
+                          }
                           flash("Project duplicated.");
                         }}
                       >
@@ -2108,11 +2297,15 @@ function App() {
                           const next = projects.filter((x) => x.id !== p.id);
                           setProjects(next);
                           try {
-                            localStorage.setItem(
-                              STORAGE_KEY,
-                              JSON.stringify(next),
-                            );
-                          } catch {}
+                            if (!storageError)
+                              localStorage.setItem(
+                                STORAGE_KEY,
+                                serializeStudioLibrary(next),
+                              );
+                          } catch {
+                            setSaveStatus("Save unavailable");
+                            setStorageError("Browser storage is unavailable or full. Export your projects to keep your work.");
+                          }
                           flash("Project removed from this browser.");
                         }}
                       >
@@ -2151,9 +2344,17 @@ function App() {
                   className="text-input"
                   type="number"
                   aria-label="Generation seed"
+                  min={0}
+                  max={4294967295}
                   value={project.seed}
                   onChange={(e) =>
-                    change((p) => ({ ...p, seed: Number(e.target.value) }))
+                    change((p) => ({
+                      ...p,
+                      seed: Math.min(
+                        4294967295,
+                        Math.max(0, Math.trunc(Number(e.target.value) || 0)),
+                      ),
+                    }))
                   }
                 />
                 <label className="field-label spaced">PROJECT TITLE</label>
@@ -2240,6 +2441,22 @@ function App() {
                 </button>
               </>
             )}
+            {modal === "replay" && (
+              <>
+                <h2>Original draft</h2>
+                <p className="helper">
+                  Replayed from its recorded inputs. Your current lyrics stay
+                  editable.
+                </p>
+                <textarea
+                  className="regular-textarea"
+                  rows={10}
+                  readOnly
+                  aria-label="Replayed original draft"
+                  value={replayText}
+                />
+              </>
+            )}
             {modal === "dialect" && (
               <>
                 <span className="feature-icon">
@@ -2251,55 +2468,71 @@ function App() {
                   {project.language.dialectStrength}/5. Preview vocabulary
                   substitutions before applying.
                 </p>
+                <label className="helper">
+                  <input
+                    type="checkbox"
+                    aria-label="Allow dialect changes to authored text"
+                    checked={replaceAuthored}
+                    onChange={(e) => setReplaceAuthored(e.target.checked)}
+                  />{" "}
+                  Allow changes to authored text. Section, line, and word locks
+                  stay protected.
+                </label>
+                {dialectDraft?.preview.diagnostics.map((issue, index) => (
+                  <p className="helper" key={`${issue.ruleId}:${index}`}>
+                    {issue.message}
+                  </p>
+                ))}
                 <div className="dialect-preview">
                   {current?.lines.map((l) => (
                     <div key={l.id}>
                       <small>
-                        {l.locked ? "LOCKED — PRESERVED" : "ORIGINAL"}
+                        {l.locked || current.locked
+                          ? "LOCKED — PRESERVED"
+                          : "ORIGINAL"}
                       </small>
                       <p>{l.text || "Empty line"}</p>
                       <small>PREVIEW</small>
                       <p className="dialect-result">
-                        {l.locked
-                          ? l.text
-                          : dialectPreview(
-                              l.text,
-                              project.language.dialect,
-                              project.language.dialectStrength,
-                            )}
+                        {dialectDraft?.lines.find((line) => line.id === l.id)
+                          ?.text ?? l.text}
                       </p>
                     </div>
                   ))}
                 </div>
                 <p className="helper">
                   A small vocabulary pack, with optional “going to” phrasing at
-                  strengths 4–5. Locked lines stay unchanged. Undo reverses the
-                  application.
+                  strengths 4–5. Authored text is protected unless enabled
+                  above. Locks stay unchanged. Undo reverses the application.
                 </p>
                 <button
                   className="primary-button full"
                   disabled={dialectApply || !current}
                   onClick={() => {
                     if (!current) return;
-                    updateSection(current.id, {
-                      lines: current.lines.map((l) =>
-                        l.locked
-                          ? l
-                          : {
-                              ...l,
-                              text: dialectPreview(
-                                l.text,
-                                project.language.dialect,
-                                project.language.dialectStrength,
-                              ),
-                              authored: true,
-                            },
-                      ),
-                    });
-                    setDialectApply(true);
-                    flash(
-                      "Guidance applied. Undo to restore the original lines.",
-                    );
+                    if (!dialectDraft) return;
+                    if (!dialectDraft.preview.edits.length) {
+                      flash(
+                        dialectDraft.preview.diagnostics
+                          .map((issue) => issue.message)
+                          .join(" ") ||
+                          "No eligible vocabulary changes. Authored text and locks are protected.",
+                      );
+                      return;
+                    }
+                    const result = applyStudioDialect(project, dialectDraft);
+                    if (result.status === "applied" && "project" in result) {
+                      change(result.project);
+                      setDialectApply(true);
+                      flash(
+                        "Guidance applied. Undo restores the original lines.",
+                      );
+                    } else
+                      flash(
+                        result.diagnostics
+                          .map((issue) => issue.message)
+                          .join(" ") || "No eligible vocabulary changes.",
+                      );
                   }}
                 >
                   {dialectApply ? (

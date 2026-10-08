@@ -1,6 +1,6 @@
 # Project and SongSpec formats
 
-Engine Foundation G implements a project envelope version 2 and a separate SongSpec version 1. The pure boundaries are in [contracts.ts](../src/domain/foundation/contracts.ts) and [persistence.ts](../src/domain/foundation/persistence.ts). Workflow activation is Stage H; the legacy schema-1 adapter remains supported.
+Engine Foundation G implements a project envelope version 2 and a separate SongSpec version 1. The pure boundaries are in [contracts.ts](../src/domain/foundation/contracts.ts) and [persistence.ts](../src/domain/foundation/persistence.ts). Stage H activates these formats in autosave, import, and export; the legacy schema-1 adapter remains supported.
 
 ## Project envelope v2
 
