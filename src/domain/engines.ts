@@ -4,7 +4,7 @@ export { analyzeSection } from "./legacy-analysis";
 import { seededRandom } from "./legacy-random";
 export { seededRandom } from "./legacy-random";
 export { normalizeWeights, resolveStyle, compileStyle } from "./legacy-style";
-import { dialectMaps } from "./legacy-pack";
+import { dialectMaps, claims } from "./legacy-pack";
 import { palette } from "./data";
 import type {
   LanguageProfile,
@@ -54,13 +54,6 @@ export function generateLines(
     `I do not need the answer just to know`,
     `${title}, I am learning to move slow`,
   ];
-  const claims: Record<string, string> = {
-    "Finding your way": "I can be uncertain and still go",
-    "Love & connection": "I choose the quiet way we learn to stay",
-    "Letting go": "I can let you go and keep the care",
-    "Ambition & identity": "I get to choose the meaning of my name",
-    "Home & belonging": "I make a home in what I choose to keep",
-  };
   const claim = claims[project.language.theme] || claims["Finding your way"];
   const refrain = [
     `I follow the ${motif}, soft and slow`,

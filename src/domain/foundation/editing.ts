@@ -68,7 +68,7 @@ function validateCandidate(patch: CandidatePatch, document: LyricDocument): void
   }
   if (!recipe || !id(recipe.id) || !recipe.inputs || !recipe.profile || recipe.profile.contractVersion !== 1 || !Array.isArray(recipe.profile.packs) || !recipe.profile.algorithms || typeof recipe.profile.algorithms !== 'object') fail('Invalid replay recipe/profile');
   validateSeed(recipe.rootSeed);
-  if (!Number.isInteger(recipe.variation) || recipe.variation < 0 || recipe.candidateOrdinal !== candidate.ordinal || !id(recipe.generationKey)) fail('Invalid recipe attempt identity');
+  if (!Number.isSafeInteger(recipe.variation) || recipe.variation < 0 || recipe.candidateOrdinal !== candidate.ordinal || !id(recipe.generationKey)) fail('Invalid recipe attempt identity');
   for (const reference of Object.values(recipe.profile.algorithms)) if (!reference || !id(reference.id) || !id(reference.version)) fail('Invalid algorithm reference');
   const packs = new Set<string>();
   for (const pack of recipe.profile.packs) { if (!pack || !id(pack.id) || packs.has(pack.id) || !id(pack.version) || !id(pack.contentHash)) fail('Invalid pack reference'); packs.add(pack.id); }

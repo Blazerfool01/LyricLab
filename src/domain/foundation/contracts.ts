@@ -61,6 +61,7 @@ export interface SectionConstraints {
   readonly repetitionPreference?: "low" | "balanced" | "high";
 }
 export interface SectionIntent {
+  readonly name?: string;
   readonly id: StableId;
   readonly generationKey: StableId;
   readonly type: SectionKind;
@@ -130,6 +131,7 @@ export interface CatalogView<T> {
   all(): readonly T[];
 }
 export interface ChoiceDefinition {
+  readonly claim?: string;
   readonly id: StableId;
   readonly label: string;
   readonly category: string;
@@ -472,6 +474,7 @@ export interface PortableConstraints {
   readonly repetitionPreference?: SectionConstraints["repetitionPreference"];
 }
 export interface PortableSection {
+  readonly name?: string;
   readonly id: StableId;
   readonly type: SectionKind;
   readonly role: SectionRole;
