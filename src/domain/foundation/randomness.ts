@@ -2,13 +2,28 @@ import type { Fingerprint, RandomSource, Seed } from './contracts';
 
 /** Codepoint ordering avoids host-locale dependence. Arrays retain semantic order. */
 export function canonical(value: unknown): string {
-  if (value === null || typeof value !== 'object') {
-    const encoded = JSON.stringify(value);
-    if (encoded === undefined) throw new Error('Unserializable fingerprint input');
+  const active = new Set<object>();
+  function encode(item: unknown): string {
+    if (item === null) return 'null';
+    if (typeof item === 'number' && !Number.isFinite(item)) throw new Error('Non-finite fingerprint input');
+    if (typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean') return JSON.stringify(item);
+    if (typeof item !== 'object') throw new Error('Unserializable fingerprint input');
+    if (active.has(item)) throw new Error('Cyclic fingerprint input');
+    active.add(item);
+    let encoded: string;
+    if (Array.isArray(item)) {
+      for (let i = 0; i < item.length; i++) if (!(i in item)) throw new Error('Sparse fingerprint input');
+      encoded = `[${item.map(encode).join(',')}]`;
+    } else {
+      const prototype = Object.getPrototypeOf(item);
+      if (prototype !== Object.prototype && prototype !== null) throw new Error('Nonplain fingerprint input');
+      if (Object.getOwnPropertySymbols(item).length) throw new Error('Symbol fingerprint input');
+      encoded = `{${Object.keys(item).sort().map(key => `${JSON.stringify(key)}:${encode((item as Record<string, unknown>)[key])}`).join(',')}}`;
+    }
+    active.delete(item);
     return encoded;
   }
-  if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
-  return `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${canonical((value as Record<string, unknown>)[key])}`).join(',')}}`;
+  return encode(value);
 }
 /** FNV-1a/UTF-16 v1, a deterministic content identifier, not a security checksum. */
 export function fingerprint(value: unknown): Fingerprint {

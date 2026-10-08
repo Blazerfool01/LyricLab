@@ -29,6 +29,18 @@ describe('canonical fingerprints', () => {
   });
 });
 
+describe('fingerprint input safety', () => {
+  it.each([NaN, Infinity, undefined, new Date(0), new Map(), new Set(), Array(1)])('rejects values outside canonical JSON: %s', value => {
+    expect(() => fingerprint(value)).toThrow();
+  });
+  it('rejects cycles but permits repeated noncyclic references', () => {
+    const cycle: { self?: unknown } = {}; cycle.self = cycle;
+    expect(() => fingerprint(cycle)).toThrow();
+    const shared = { text: 'same' };
+    expect(fingerprint([shared, shared])).toBe(fingerprint([{ text: 'same' }, { text: 'same' }]));
+  });
+});
+
 describe('named deterministic streams', () => {
   it('pins the named Mulberry32 v1 stream vector', () => {
     const source = namedRandom(2408, ['section-key-a', 'candidate', '3']);
