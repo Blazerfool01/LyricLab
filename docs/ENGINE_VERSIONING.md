@@ -1,6 +1,6 @@
 # Engine Foundation version and replay policy
 
-Status: approved target policy, recorded in Stage A. Production remains Project schema v1 with the existing v0.1 engines. The target contracts are compile-time boundaries, not an activated persistence or interchange format.
+Status: policy recorded in Stage A; A–F engines are implemented. Stage G implements project-envelope v2, SongSpec v1, migration, and supported-profile replay. Stage H activates the workflow boundaries.
 
 ## Independent version axes
 
@@ -42,11 +42,11 @@ Only explicitly supported profiles are replayable. Stage A establishes one legac
 
 ## Persistence and SongSpec
 
-Stage G introduces a versioned project envelope and an explicit v1 migration. Existing documents keep lyrics, locks, references, and conservative authorship. Missing origin on imported nonempty text is `unknown` and protected by default. Validation, repair, migration, and catalogue resolution are distinct operations. Unknown/unavailable pack references survive decoding. Repairs return diagnostics and remap references; only offending IDs are replaced through deterministic repair rules. Oversized content is reported/rejected instead of silently truncated. These are approved target behaviors, not fixes made by Stage A.
+Stage G introduces a versioned project envelope and an explicit v1 migration. Existing documents keep lyrics, locks, references, and conservative authorship. Missing origin on imported nonempty text is `unknown` and protected by default. Validation, repair, migration, and catalogue resolution are distinct operations. Unknown/unavailable pack references survive decoding. Repairs return diagnostics and remap references; only offending IDs are replaced through deterministic repair rules. Oversized content is reported/rejected instead of silently truncated. These boundaries are implemented in Stage G; Stage A originally recorded the policy.
 
 The portable SongSpec projector exports creative intent, descriptive choices, performance guidance, ordered sections, and lyrics. It excludes local warning suppression, revisions, timestamps, locks, and executable recipes. Stable references must be accompanied by descriptive information needed by consumers without LyricLab packs. Dialect intent, rhyme, cadence, and narrative purpose remain portable. Recipe details belong to the project format; future optional extensions must not become necessary to consume SongSpec.
 
-The current `.SongSpec.json` export is a Project-shaped preview. It stays unchanged in Stage A. Stage G must provide a documented legacy export path or adapter, distinguish the new interchange format, and test compatibility before the v1.0 schema freeze.
+The original `.SongSpec.json` preview was Project-shaped. Stage G separates the interchange projector and retains a legacy editor-project adapter. Stage H exposes an explicit legacy export alongside the new SongSpec. Compatibility tests precede the v1.0 schema freeze.
 
 ## Golden maintenance
 

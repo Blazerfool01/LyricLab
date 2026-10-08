@@ -1,42 +1,29 @@
-# Current project and SongSpec format
+# Project and SongSpec formats
 
-Status: implemented schema version 1; broader interoperability contract is scheduled to freeze at v1.0. The authoritative TypeScript types are in [types.ts](../src/domain/types.ts), with import validation in [project.ts](../src/domain/project.ts).
+Engine Foundation G implements a project envelope version 2 and a separate SongSpec version 1. The pure boundaries are in [contracts.ts](../src/domain/foundation/contracts.ts) and [persistence.ts](../src/domain/foundation/persistence.ts). Workflow activation is Stage H; the legacy schema-1 adapter remains supported.
 
-The project export and SongSpec export currently contain the same data shape. Their filenames differ (`.lyriclab.json` and `.SongSpec.json`). Section lyrics are nested inside each section, and the voice is nested inside `style`. These implementation details differ from the original roadmap's illustrative flat shape. Consumers should follow the actual versioned types.
+## Project envelope v2
 
-## Top-level fields
+`.lyriclab.json` is the editable backup. It contains `schemaVersion`, `app`, project identity, `blueprint`, accepted `document`, replay `recipes`, variation counters, `updatedAt`, and ignored warning IDs. The blueprint contains root seed, structured style/language references, ordered section intents, stable generation keys, roles, and narrative intent. The document contains accepted text, origin, locks, word ranges, anchored annotations, and historical recipe lineage.
 
-| Field | Meaning |
-| --- | --- |
-| `schemaVersion` | Currently `1`; unsupported versions are rejected safely. |
-| `app` | `LyricLab`. |
-| `id` | Stable project identifier within local storage. |
-| `title`, `concept` | Song title and semantic concept. |
-| `seed` | Explicit integer for deterministic derivation. |
-| `style` | Weighted genre/mood choices, BPM, rhythm, voice, bass, drums, instrumentation, production, and mix. |
-| `language` | Theme, secondary theme, perspective, register, motif, preferred/avoided terms, dialect, and strength. |
-| `structure` | Ordered sections, including purpose, intensity, rhyme, cadence, locks, and editable lyrics. |
-| `settings` | Ignored warning IDs. |
-| `updatedAt` | ISO date-time for local project metadata. |
+Accepted lyrics are authoritative. Compiled prompts, analysis, candidate scores, and derived narrative state are reconstructed. The React editor is a projection; its legacy-shaped fields are not persisted alongside a second authoritative blueprint/document.
 
-## Section and line fields
+Replay recipes record the original blueprint/document snapshot, target scope, seed, variation, ordinal, policy, budget, exact algorithm/pack versions, and output fingerprint. Replay inspects the original operation; it does not overwrite current lyrics. Unsupported dependencies produce an explicit diagnostic while preserving accepted text.
 
-Sections carry `id`, `type`, `name`, `purpose`, `intensity` (0–100), `rhymeScheme`, `syllableRange`, `delivery`, `locked`, and `lines`. Supported types: intro, verse, pre-chorus, chorus, bridge, outro, custom.
+## SongSpec v1
 
-Each line carries `id`, `text`, `locked`, and `authored`. Generated lines are editable. Regeneration preserves a locked section, locked lines, and authored lines. Import preserves authored/locked status. IDs are independent of display labels.
+`.SongSpec.json` has `format: "SongSpec"` and `schemaVersion: 1`. It carries title/concept, weighted descriptive genres/moods, BPM/rhythm, categorized traits, structured voice, language themes/tones/perspective/register/motif/vocabulary rules/dialect guidance, narrative intent, and ordered sections with purpose/role/intensity/hook archetype/rhyme/cadence and lyrics.
 
-## Validation and storage
+References have descriptive labels so consumers do not need LyricLab's packs. Unknown references remain visible. SongSpec excludes local locks, revisions, timestamps, warning suppression, and executable replay recipes. This foundation format is independently versioned; the broader product interoperability release gate remains open until v1.0.
 
-Import checks the schema, required top-level shape, section shape, and supported genre IDs. Optional invalid values are repaired where possible, including tempo, intensity, delivery ranges, and language defaults. Unreadable LocalStorage payloads are reported without silently replacing them. Future migrations must be explicit and tested.
+## Migration and compatibility
 
-Browser storage key: `lyriclab.projects.v1`. Active project key: `lyriclab.active`. Export JSON for a portable backup. Opening another project from an import gives it a new local project ID, preserving song content and section/line metadata.
+Schema-1 projects keep their valid lyrics, custom names, locks, and unresolved choices. Imported nonempty lines without reliable authorship evidence have conservative `unknown` origin and receive protection. Migration cannot reconstruct historical generator inputs that schema 1 never recorded.
 
-Compiled style prompts and analysis results are not persisted. They are reconstructed from the saved blueprint and explicit seed. The generator algorithms and declarative data version must remain stable for historical reproducibility; future changes need fixtures and a migration/versioning strategy.
+Decoding validates required structure, reports optional repairs, and keeps missing dependencies as references. Repairs are deterministic; oversized content is rejected instead of truncated. Unsupported versions fail safely. Historical v0.1 output remains covered by fixed fixtures and the legacy adapter. An explicit legacy project export remains available for consumers of the earlier Project-shaped format. Schema 1 cannot carry word locks, conservative unknown-origin metadata, or executable recipes; use the version-2 project backup to retain these.
 
-## Approved future separation
+## Browser storage
 
-[Engine Foundation Stage G](ENGINE_FOUNDATION.md) will introduce explicit project migration and SongSpec projection. Stage A supplies only target interfaces and [version policy](ENGINE_VERSIONING.md). It does not activate them, change schemaVersion, or remove fields from existing exports. Current v1 compatibility remains covered by fixed characterization fixtures. Portable intent and lyrics will be separated from local editor state and executable replay records before the interchange freeze.
+The existing library key is `lyriclab.projects.v1`; this key names the library location, not the schema of each stored envelope. The active-project key is `lyriclab.active`. Unreadable library payloads must be reported and protected from automatic replacement. Export JSON for a backup.
 
-## Boundaries
-
-No runtime dependency on SonicStudio, Suno, Udio, GitHub, or an AI provider. Shared-format integration comes after a documented, tested schema freeze. Richer language and dialect metadata and migration infrastructure remain part of the roadmap.
+No runtime dependency on SonicStudio, Suno, Udio, GitHub, or an AI provider is introduced. GitHub stores application code; song projects remain local.
