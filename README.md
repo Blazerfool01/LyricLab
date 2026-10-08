@@ -8,6 +8,7 @@ A standalone, client-only songwriting studio built with React, Vite, and TypeScr
 
 - [Product principles and milestone roadmap](docs/ROADMAP.md)
 - [Approved Engine Foundation architecture (A–H)](docs/ENGINE_FOUNDATION.md)
+- [Milestone implementation log](docs/ENGINE_IMPLEMENTATION_LOG.md)
 - [Engine version and replay policy](docs/ENGINE_VERSIONING.md)
 - [Development and contribution workflow](docs/DEVELOPMENT.md)
 - [Current portable project / SongSpec format](docs/SONGSPEC.md)

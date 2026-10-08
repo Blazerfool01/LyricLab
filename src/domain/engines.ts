@@ -1,4 +1,6 @@
-import { cadenceRanges, genres, palette, traitConflicts } from "./data";
+import { legacyGenreView } from "./foundation/catalogs";
+import { exceptions, rhymeSets, dialectMaps } from "./legacy-pack";
+import { cadenceRanges, palette, traitConflicts } from "./data";
 import type {
   LanguageProfile,
   Project,
@@ -38,9 +40,9 @@ export function normalizeWeights(values: WeightedSelection[]) {
 export function resolveStyle(style: StyleSpec, seed: number) {
   const random = seededRandom(seed);
   const blend = normalizeWeights(
-    style.genres.filter((g) => genres.some((genre) => genre.id === g.id)),
+    style.genres.filter((g) => legacyGenreView.get(g.id) !== undefined),
   )
-    .map((g) => ({ ...g, genre: genres.find((x) => x.id === g.id) }))
+    .map((g) => ({ ...g, genre: legacyGenreView.get(g.id) }))
     .filter((g) => g.genre);
   const warnings: string[] = [];
   if (!blend.length)
@@ -126,25 +128,6 @@ export function compileStyle(
     );
   return blocks.join("\n\n");
 }
-const exceptions: Record<string, number> = {
-  fire: 1,
-  hour: 1,
-  our: 1,
-  every: 2,
-  different: 3,
-  quiet: 2,
-  familiar: 3,
-  towards: 1,
-  poem: 2,
-  poetry: 3,
-  rhythm: 2,
-  little: 2,
-  people: 2,
-  something: 2,
-  evening: 2,
-  memories: 3,
-  promises: 3,
-};
 export function syllables(text: string) {
   return (text.toLowerCase().match(/[a-z]+(?:'[a-z]+)?/g) || []).reduce(
     (sum, word) => {
@@ -158,23 +141,6 @@ export function syllables(text: string) {
     0,
   );
 }
-const rhymeSets = [
-  ["light", "night", "bright", "sight", "right", "flight"],
-  ["go", "slow", "know", "grow", "show", "flow", "glow"],
-  ["own", "known", "alone", "home", "stone"],
-  ["say", "away", "day", "way", "stay"],
-  ["rain", "train", "pain", "again"],
-  ["keep", "sleep", "deep"],
-  ["wall", "fall", "call"],
-  ["name", "game", "same", "flame", "frame"],
-  ["me", "see", "free", "sea", "be"],
-  ["door", "more", "before", "floor"],
-  ["hand", "stand", "land"],
-  ["you", "too", "true", "shoe"],
-  ["back", "track", "black"],
-  ["coat", "note", "boat", "float"],
-  ["road", "hold", "old", "cold"],
-];
 export function rhymeKey(text: string) {
   const word =
     text
@@ -358,21 +324,8 @@ export function generateLines(
 }
 export function dialectPreview(text: string, pack: string, strength: number) {
   if (pack === "Standard" || strength < 2) return text;
-  const maps: Record<string, Record<string, string>> = {
-    "British English": {
-      apartment: "flat",
-      sidewalk: "pavement",
-      elevator: "lift",
-      downtown: "the town centre",
-    },
-    "American English": {
-      flat: "apartment",
-      pavement: "sidewalk",
-      lift: "elevator",
-    },
-  };
   let result = text;
-  for (const [word, replacement] of Object.entries(maps[pack] || {}))
+  for (const [word, replacement] of Object.entries(dialectMaps[pack] || {}))
     result = result.replace(new RegExp(`\\b${word}\\b`, "gi"), replacement);
   if (strength >= 4) result = result.replace(/\bgoing to\b/gi, "gonna");
   return result;
