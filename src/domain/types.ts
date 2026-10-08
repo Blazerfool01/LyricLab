@@ -59,5 +59,7 @@ export type Project = {
   structure: SongSection[];
   settings: { ignoredWarnings: string[] };
   updatedAt: string;
+  /** Ephemeral foundation/editor bridge. Never serialize the editor view. */
+  engineState?: import('./foundation/adapters').EditorEngineState;
 };
 export type PromptFormat = "Compact" | "Detailed" | "Annotated";

@@ -40,3 +40,5 @@ produce a rhyme mismatch warning; section purpose and concept do not establish
 narrative state. These outputs must not be mistaken for recommended behavior.
 
 Run with `npm test`. The fixture contains no user project data.
+
+Foundation execution profiles have separate literal fixtures in `../foundation/generation-fixture.json` (accepted E behavior) and `../foundation/narrative-fixture.json` (accepted F behavior). Their metadata records the profile/capture baseline. Replay and generation tests read these expectations; ordinary tests never regenerate them. The profile's exact algorithms and pack references are part of each request. The legacy fixture remains unchanged.

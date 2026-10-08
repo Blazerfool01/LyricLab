@@ -49,7 +49,7 @@ Implement each milestone in this order:
 7. Regression pass, including offline operation.
 8. Milestone commit or release only after the Definition of Done is met.
 
-The initial import implements v0.1 plus early tools for later milestones. The full v1.0 release gate remains open. Keep delivered behavior in README.md and planned requirements in ROADMAP.md. Schema version 1 is the current implementation format, not yet a frozen cross-application interoperability contract.
+The initial import implements v0.1 plus early tools for later milestones. The full v1.0 release gate remains open. Keep delivered behavior in README.md and planned requirements in ROADMAP.md. Engine Foundation G implements project-envelope v2 and portable SongSpec v1, with compatibility migration and separate legacy export. Stage H activates them in the UI. The broader v1.0 interoperability release gate remains open.
 
 ## Engine Foundation work
 

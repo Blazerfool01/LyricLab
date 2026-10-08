@@ -1,0 +1,512 @@
+{
+  "metadata": {
+    "fixtureVersion": 1,
+    "profile": "annotated-patterns-v1",
+    "capturedFrom": "f90adaf1c4ca28c0643645207ea600d15fbb1dca",
+    "description": "Fixed historical accepted F profile; tests never regenerate expectations."
+  },
+  "request": {
+    "blueprint": {
+      "id": "blueprint-a",
+      "title": "Compass",
+      "concept": "Choose a direction",
+      "rootSeed": 2408,
+      "style": {
+        "genres": [
+          {
+            "id": "indie-folk",
+            "weight": 1
+          }
+        ],
+        "moods": [],
+        "voice": {
+          "textureIds": [],
+          "deliveryIds": []
+        },
+        "traitIds": []
+      },
+      "language": {
+        "themeIds": [
+          {
+            "id": "theme:finding",
+            "weight": 1
+          }
+        ],
+        "toneIds": [],
+        "perspective": "first",
+        "registerId": "language:poetic",
+        "motif": "compass",
+        "preferredTerms": [],
+        "avoidedTerms": [
+          "forbidden phrase"
+        ]
+      },
+      "sections": [
+        {
+          "id": "section-a",
+          "generationKey": "stream-a",
+          "type": "verse",
+          "role": "establish",
+          "purpose": "Establish the journey",
+          "lineCount": 4,
+          "intensity": 40,
+          "constraints": {
+            "syllableRange": [
+              4,
+              10
+            ],
+            "rhymeScheme": "AA"
+          }
+        }
+      ],
+      "narrative": {
+        "narratorId": "narrator-a",
+        "subjectIds": [],
+        "goals": []
+      }
+    },
+    "document": {
+      "revision": "fnv1a-v1-fdcd9f52",
+      "sections": [
+        {
+          "sectionId": "section-a",
+          "locked": false,
+          "lines": [
+            {
+              "id": "line-1",
+              "text": "",
+              "origin": "generated",
+              "locked": false,
+              "lockedRanges": [],
+              "annotations": []
+            },
+            {
+              "id": "line-2",
+              "text": "",
+              "origin": "generated",
+              "locked": false,
+              "lockedRanges": [],
+              "annotations": []
+            },
+            {
+              "id": "line-3",
+              "text": "",
+              "origin": "generated",
+              "locked": false,
+              "lockedRanges": [],
+              "annotations": []
+            },
+            {
+              "id": "line-4",
+              "text": "",
+              "origin": "generated",
+              "locked": false,
+              "lockedRanges": [],
+              "annotations": []
+            }
+          ]
+        }
+      ]
+    },
+    "sectionId": "section-a",
+    "targetLineIds": [
+      "line-1",
+      "line-2",
+      "line-3",
+      "line-4"
+    ],
+    "variation": 0,
+    "profile": {
+      "contractVersion": 1,
+      "algorithms": {
+        "protection": {
+          "id": "shared-protected-application",
+          "version": "1.0.0"
+        },
+        "style": {
+          "id": "resolved-style-validation",
+          "version": "1.0.0"
+        },
+        "randomness": {
+          "id": "named-mulberry32",
+          "version": "1.0.0"
+        },
+        "language": {
+          "id": "catalog-language-resolution",
+          "version": "1.0.0"
+        },
+        "planning": {
+          "id": "legacy-section-planning",
+          "version": "1.0.0"
+        },
+        "composition": {
+          "id": "annotated-pattern-composition",
+          "version": "1.0.0"
+        },
+        "analysis": {
+          "id": "foundation-text-analysis",
+          "version": "1.0.0"
+        },
+        "evaluation": {
+          "id": "foundation-candidate-evaluation",
+          "version": "1.0.0"
+        },
+        "transformation": {
+          "id": "controlled-dialect",
+          "version": "1.0.0"
+        },
+        "selection": {
+          "id": "bounded-candidate-search",
+          "version": "2.0.0"
+        },
+        "narrative": {
+          "id": "accepted-annotation-reduction",
+          "version": "1.0.0"
+        }
+      },
+      "packs": [
+        {
+          "id": "legacy-v0.1",
+          "version": "1.0.0",
+          "contentHash": "fnv1a-v1-7e737857"
+        },
+        {
+          "id": "legacy-claims",
+          "version": "1.0.0",
+          "contentHash": "fnv1a-v1-84351f31"
+        },
+        {
+          "id": "narrative-metadata",
+          "version": "1.0.0",
+          "contentHash": "fnv1a-v1-e7940598"
+        }
+      ]
+    },
+    "replacementPolicy": {
+      "operation": "generate",
+      "authored": "preserve"
+    },
+    "evaluationPolicy": {
+      "id": "offline-draft",
+      "version": "1.0.0",
+      "hardRuleIds": [
+        "avoided",
+        "cliche"
+      ],
+      "scoreWeights": {
+        "cadence": 1,
+        "rhyme": 1,
+        "repetition": 1,
+        "perspective": 1
+      }
+    },
+    "budget": {
+      "maxAttempts": 16,
+      "maxCandidates": 3
+    }
+  },
+  "expected": {
+    "status": "ready",
+    "candidates": [
+      {
+        "candidate": {
+          "id": "candidate:fnv1a-v1-6f8b9bb3",
+          "ordinal": 1,
+          "lines": [
+            {
+              "slotId": "slot:line-1",
+              "targetLineId": "line-1",
+              "text": "The quiet streets are teaching me to slow",
+              "annotations": []
+            },
+            {
+              "slotId": "slot:line-2",
+              "targetLineId": "line-2",
+              "text": "I trace the morning on a fading map",
+              "annotations": [
+                {
+                  "id": "candidate:fnv1a-v1-6f8b9bb3:line-2:effect:1",
+                  "evidence": "template-declared",
+                  "textFingerprint": "fnv1a-v1-f941ffab",
+                  "effect": {
+                    "kind": "motif",
+                    "motifId": "theme:finding:object:1"
+                  }
+                }
+              ]
+            },
+            {
+              "slotId": "slot:line-3",
+              "targetLineId": "line-3",
+              "text": "I trace the morning on a fading map",
+              "annotations": [
+                {
+                  "id": "candidate:fnv1a-v1-6f8b9bb3:line-3:effect:1",
+                  "evidence": "template-declared",
+                  "textFingerprint": "fnv1a-v1-f941ffab",
+                  "effect": {
+                    "kind": "motif",
+                    "motifId": "theme:finding:object:1"
+                  }
+                }
+              ]
+            },
+            {
+              "slotId": "slot:line-4",
+              "targetLineId": "line-4",
+              "text": "The quiet streets are teaching me to slow",
+              "annotations": []
+            }
+          ],
+          "trace": {
+            "templateIds": [
+              "theme:finding:verse:2",
+              "theme:finding:verse:1",
+              "theme:finding:verse:1",
+              "theme:finding:verse:2"
+            ],
+            "vocabularyIds": []
+          }
+        },
+        "evaluation": {
+          "candidateId": "candidate:fnv1a-v1-6f8b9bb3",
+          "admissible": true,
+          "scores": {
+            "cadence": 0.25,
+            "perspective": 0.25,
+            "repetition": 0.25,
+            "rhyme": 0.05
+          },
+          "diagnostics": [
+            {
+              "ruleId": "rhyme",
+              "message": "Expected end-rhyme relationship is uncertain; slant rhyme remains valid.",
+              "lineIds": [
+                "line-1",
+                "line-2"
+              ],
+              "severity": "warning",
+              "origin": "context"
+            },
+            {
+              "ruleId": "rhyme",
+              "message": "Expected end-rhyme relationship is uncertain; slant rhyme remains valid.",
+              "lineIds": [
+                "line-1",
+                "line-3"
+              ],
+              "severity": "warning",
+              "origin": "context"
+            },
+            {
+              "ruleId": "rhyme",
+              "message": "Expected end-rhyme relationship is uncertain; slant rhyme remains valid.",
+              "lineIds": [
+                "line-2",
+                "line-4"
+              ],
+              "severity": "warning",
+              "origin": "context"
+            },
+            {
+              "ruleId": "rhyme",
+              "message": "Expected end-rhyme relationship is uncertain; slant rhyme remains valid.",
+              "lineIds": [
+                "line-3",
+                "line-4"
+              ],
+              "severity": "warning",
+              "origin": "context"
+            }
+          ]
+        }
+      },
+      {
+        "candidate": {
+          "id": "candidate:fnv1a-v1-2068ef48",
+          "ordinal": 11,
+          "lines": [
+            {
+              "slotId": "slot:line-1",
+              "targetLineId": "line-1",
+              "text": "The quiet streets are teaching me to slow",
+              "annotations": []
+            },
+            {
+              "slotId": "slot:line-2",
+              "targetLineId": "line-2",
+              "text": "I leave a little space for looking back",
+              "annotations": []
+            },
+            {
+              "slotId": "slot:line-3",
+              "targetLineId": "line-3",
+              "text": "The quiet streets are teaching me to slow",
+              "annotations": []
+            },
+            {
+              "slotId": "slot:line-4",
+              "targetLineId": "line-4",
+              "text": "I leave a little space for looking back",
+              "annotations": []
+            }
+          ],
+          "trace": {
+            "templateIds": [
+              "theme:finding:verse:2",
+              "theme:finding:verse:3",
+              "theme:finding:verse:2",
+              "theme:finding:verse:3"
+            ],
+            "vocabularyIds": []
+          }
+        },
+        "evaluation": {
+          "candidateId": "candidate:fnv1a-v1-2068ef48",
+          "admissible": true,
+          "scores": {
+            "cadence": 0.25,
+            "perspective": 0.25,
+            "repetition": 0.25,
+            "rhyme": 0.05
+          },
+          "diagnostics": [
+            {
+              "ruleId": "rhyme",
+              "message": "Expected end-rhyme relationship is uncertain; slant rhyme remains valid.",
+              "lineIds": [
+                "line-1",
+                "line-2"
+              ],
+              "severity": "warning",
+              "origin": "context"
+            },
+            {
+              "ruleId": "rhyme",
+              "message": "Expected end-rhyme relationship is uncertain; slant rhyme remains valid.",
+              "lineIds": [
+                "line-1",
+                "line-4"
+              ],
+              "severity": "warning",
+              "origin": "context"
+            },
+            {
+              "ruleId": "rhyme",
+              "message": "Expected end-rhyme relationship is uncertain; slant rhyme remains valid.",
+              "lineIds": [
+                "line-2",
+                "line-3"
+              ],
+              "severity": "warning",
+              "origin": "context"
+            },
+            {
+              "ruleId": "rhyme",
+              "message": "Expected end-rhyme relationship is uncertain; slant rhyme remains valid.",
+              "lineIds": [
+                "line-3",
+                "line-4"
+              ],
+              "severity": "warning",
+              "origin": "context"
+            }
+          ]
+        }
+      },
+      {
+        "candidate": {
+          "id": "candidate:fnv1a-v1-5fa4bccb",
+          "ordinal": 9,
+          "lines": [
+            {
+              "slotId": "slot:line-1",
+              "targetLineId": "line-1",
+              "text": "The quiet streets are teaching me to slow",
+              "annotations": []
+            },
+            {
+              "slotId": "slot:line-2",
+              "targetLineId": "line-2",
+              "text": "I leave a little space for looking back",
+              "annotations": []
+            },
+            {
+              "slotId": "slot:line-3",
+              "targetLineId": "line-3",
+              "text": "The quiet streets are teaching me to slow",
+              "annotations": []
+            },
+            {
+              "slotId": "slot:line-4",
+              "targetLineId": "line-4",
+              "text": "And let the open window tell me where to go",
+              "annotations": []
+            }
+          ],
+          "trace": {
+            "templateIds": [
+              "theme:finding:verse:2",
+              "theme:finding:verse:3",
+              "theme:finding:verse:2",
+              "theme:finding:verse:4"
+            ],
+            "vocabularyIds": []
+          }
+        },
+        "evaluation": {
+          "candidateId": "candidate:fnv1a-v1-5fa4bccb",
+          "admissible": true,
+          "scores": {
+            "cadence": 0.125,
+            "perspective": 0.25,
+            "repetition": 0.25,
+            "rhyme": 0.0625
+          },
+          "diagnostics": [
+            {
+              "ruleId": "cadence",
+              "message": "About 12 syllables; the effective target is 4–10.",
+              "lineIds": [
+                "line-4"
+              ],
+              "severity": "warning",
+              "origin": "generated"
+            },
+            {
+              "ruleId": "rhyme",
+              "message": "Expected end-rhyme relationship is uncertain; slant rhyme remains valid.",
+              "lineIds": [
+                "line-1",
+                "line-2"
+              ],
+              "severity": "warning",
+              "origin": "context"
+            },
+            {
+              "ruleId": "rhyme",
+              "message": "Expected end-rhyme relationship is uncertain; slant rhyme remains valid.",
+              "lineIds": [
+                "line-2",
+                "line-3"
+              ],
+              "severity": "warning",
+              "origin": "context"
+            },
+            {
+              "ruleId": "rhyme",
+              "message": "Expected end-rhyme relationship is uncertain; slant rhyme remains valid.",
+              "lineIds": [
+                "line-2",
+                "line-4"
+              ],
+              "severity": "warning",
+              "origin": "context"
+            }
+          ]
+        }
+      }
+    ],
+    "selectedCandidateId": "candidate:fnv1a-v1-6f8b9bb3"
+  }
+}

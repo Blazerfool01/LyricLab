@@ -23,7 +23,8 @@ export interface AlgorithmRef {
   readonly version: string;
 }
 export interface ExecutionProfile {
-  readonly contractVersion: 1;
+  /** Historical future contracts remain inspectable even when runtime cannot execute them. */
+  readonly contractVersion: number;
   readonly algorithms: Readonly<Record<string, AlgorithmRef>>;
   readonly packs: readonly PackRef[];
 }
@@ -436,9 +437,9 @@ export interface DialectTransformer {
   preview(document: LyricDocument, pack: DialectPack, options: DialectOptions, policy: ReplacementPolicy): TransformationPreview;
 }
 
-/** Target editing envelope; no schema number or migration is activated by Stage A. */
+/** Canonical editing envelope; editor compatibility views are never serialized. */
 export interface ProjectEnvelope {
-  readonly schemaVersion: number;
+  readonly schemaVersion: 2;
   readonly app: "LyricLab";
   readonly id: StableId;
   readonly blueprint: SongBlueprint;
@@ -446,6 +447,7 @@ export interface ProjectEnvelope {
   readonly recipes: readonly ReplayRecipe[];
   readonly updatedAt: string;
   readonly ignoredWarnings: readonly StableId[];
+  readonly variations: Readonly<Record<StableId, number>>;
 }
 export interface PortableChoice {
   readonly id: StableId;
@@ -482,12 +484,13 @@ export interface PortableSection {
   readonly intensity: number;
   readonly lineCount: number;
   readonly constraints: PortableConstraints;
+  readonly hookArchetype?: HookArchetype;
   readonly lyrics: readonly string[];
 }
 /** Interchange excludes locks, revisions, recipes, warning suppression, and timestamps. */
 export interface SongSpec {
   readonly format: "SongSpec";
-  readonly schemaVersion: number;
+  readonly schemaVersion: 1;
   readonly title: string;
   readonly concept: string;
   readonly style: {
@@ -500,6 +503,7 @@ export interface SongSpec {
   };
   readonly language: {
     readonly themes: readonly PortableChoice[];
+    readonly tones: readonly PortableChoice[];
     readonly perspective: Perspective;
     readonly register: PortableChoice;
     readonly motif: string;
@@ -508,6 +512,7 @@ export interface SongSpec {
     readonly dialect?: PortableDialect;
   };
   readonly sections: readonly PortableSection[];
+  readonly narrative: NarrativeIntent;
 }
 
 export type Resolution<T> =

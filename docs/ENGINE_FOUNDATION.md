@@ -1,6 +1,6 @@
 # Engine Foundation architecture
 
-Status: A–H approved by the project owner. This document records the agreed architecture. Stages A–C provide contracts, fixed v0.1 fixtures, catalogs, streams, and independent analysis/evaluation/style boundaries. Stage D adds shared atomic protection/application and dialect previews. Stage E adds catalog composition and bounded candidate search. Stage F adds annotation-backed preceding-section state and role-aware composition. Stages G–H remain implementation work; their behavior is not active merely because a target interface exists.
+Status: A–H approved by the project owner. This document records the agreed architecture. Stages A–C provide contracts, fixed v0.1 fixtures, catalogs, streams, and independent analysis/evaluation/style boundaries. Stage D adds shared atomic protection/application and dialect previews. Stage E adds catalog composition and bounded candidate search. Stage F adds annotation-backed preceding-section state and role-aware composition. Stage G adds project-envelope migration, exact-profile replay, and portable SongSpec projection. Stage H remains implementation work; the new persistence and engine paths are activated there rather than by declaring target interfaces.
 
 Read this together with [ENGINE_VERSIONING.md](ENGINE_VERSIONING.md), [the product roadmap](ROADMAP.md), and [current SongSpec documentation](SONGSPEC.md).
 
@@ -145,7 +145,7 @@ Characterize the current behavior first. Keep current entry points as facades. E
 | D | Common protection/application, atomic/stale patches | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
 | E | Legacy composer adapter, bounded attempts, ranking/exhaustion | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
 | F | Typed roles, annotation provenance, deterministic narrative state | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
-| G | Replay records, v1 migration, separate SongSpec projection | Approved, pending |
+| G | Replay records, v1 migration, separate SongSpec projection | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
 | H | Workflow/offline regression and dependency-boundary verification | Approved, pending |
 
 ## Stage A Definition of Done

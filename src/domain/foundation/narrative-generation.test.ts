@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import fixture from './generation-fixture.json';
+import narrativeFixture from './narrative-fixture.json';
 import { generationCatalog, freeze } from './catalogs';
 import { documentApplicator, withRevision } from './editing';
 import { defaultEvaluationPolicy, makeRecipe } from './generation';
-import { foundationCoordinator, narrativeCatalog, narrativeProfile } from './narrative-generation';
+import { effectManifest, foundationCoordinator, narrativeCatalog, narrativeProfile } from './narrative-generation';
 import { narrativeReducer } from './narrative';
 import { makeTestContext } from './test-context';
 import type { GenerationRequest, GenerationResult } from './contracts';
@@ -13,6 +14,9 @@ function request(): GenerationRequest {
 }
 function ready(result: GenerationResult) { if (result.status !== 'ready') throw new Error(JSON.stringify(result)); return result; }
 describe('annotation-backed composition', () => {
+  it('reproduces the literal historical F profile result', () => {
+    expect(foundationCoordinator.generate(narrativeFixture.request as unknown as GenerationRequest, narrativeCatalog)).toEqual(narrativeFixture.expected);
+  });
   it('retains the literal E profile result through the new registry', () => {
     expect(foundationCoordinator.generate(fixture.request as unknown as GenerationRequest, generationCatalog)).toEqual(fixture.expected);
   });
@@ -38,6 +42,24 @@ describe('annotation-backed composition', () => {
     expect(narrativeReducer.derive(input.blueprint, applied.document, 'next')).toMatchObject({ status: 'resolved', value: { motifIds: ['theme:finding:object:1'] } });
     const following = ready(foundationCoordinator.generate({ ...input, document: applied.document, sectionId: 'next', targetLineIds: applied.document.sections[1].lines.map(line => line.id) }, narrativeCatalog));
     expect(following.candidates.every(entry => !entry.candidate.trace.templateIds.includes('theme:finding:verse:1'))).toBe(true);
+  });
+  it('validates additive metadata references without changing phrase patterns', () => {
+    for (const [id, effects] of Object.entries(effectManifest)) {
+      expect(narrativeCatalog.templates.get(id)?.pattern).toBe(generationCatalog.templates.get(id)?.pattern);
+      for (const effect of effects) if (effect.kind === 'motif' && effect.motif.kind === 'literal') expect(narrativeCatalog.vocabulary.get(String(effect.motif.value))).toBeDefined();
+    }
+  });
+  it('does not establish narrator facts after clipping or perspective changes', () => {
+    const original = request();
+    const themed = { ...original, blueprint: { ...original.blueprint, language: { ...original.blueprint.language, themeIds: [{ id: 'theme:ambition', weight: 1 }] } } };
+    for (const mode of ['clipped', 'third'] as const) {
+      const input = { ...themed, blueprint: { ...themed.blueprint, language: { ...themed.blueprint.language, perspective: mode === 'third' ? 'third' as const : 'first' as const }, sections: themed.blueprint.sections.map(section => ({ ...section, constraints: { ...section.constraints, ...(mode === 'clipped' ? { deliveryId: 'delivery:clipped' } : {}) } })) } };
+      // Resolve the stable catalogue ID from its display definition for this regression.
+      const clippedId = narrativeCatalog.choices.all().find(choice => choice.label === 'Short / clipped')!.id;
+      const normalized = mode === 'clipped' ? { ...input, blueprint: { ...input.blueprint, sections: input.blueprint.sections.map(section => ({ ...section, constraints: { ...section.constraints, deliveryId: clippedId } })) } } : input;
+      const result = ready(foundationCoordinator.generate(normalized, narrativeCatalog));
+      expect(result.candidates.every(entry => entry.candidate.lines.every(line => line.annotations.every(annotation => annotation.effect.kind !== 'assert')))).toBe(true);
+    }
   });
   it('requires the exact metadata pack and preserves E catalogs', () => {
     expect(foundationCoordinator.generate(request(), generationCatalog).status).toBe('missing-dependency');
