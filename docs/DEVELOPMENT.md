@@ -7,7 +7,7 @@ GitHub's `main` branch is the accepted source of truth. Workspace directories, Z
 ## Start from the repository
 
 ```sh
-git clone https://github.com/Blazerfool01/LyricLab.git
+git clone https://github.com/Blazerfool01/LyricLab.git lyriclab
 cd lyriclab
 npm ci
 npm run dev
