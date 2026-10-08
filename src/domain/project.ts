@@ -1,3 +1,6 @@
+import { emptyEngineState } from './foundation/adapters';
+import { decodeProject, toEditorProject, toEnvelope } from './foundation/persistence';
+import { fingerprint } from './foundation/randomness';
 import type { Project, SongSection, SectionType } from "./types";
 import { genres, sectionPurposes } from "./data";
 export const uid = () =>
@@ -289,4 +292,32 @@ export function download(name: string, content: string, type = "text/plain") {
   anchor.download = name;
   anchor.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/** Active studio persistence; legacy validators/readers above retain their recorded schema-1 contract. */
+export function freshStudioProject(project: Project): Project {
+  const state = emptyEngineState();
+  return toEditorProject(toEnvelope({ ...project, engineState: { ...state, lines: Object.fromEntries(project.structure.flatMap(section => section.lines.map(line => [line.id, { origin: line.authored ? 'authored' as const : 'generated' as const, textFingerprint: fingerprint(line.text), lockedRanges: [], annotations: [] }]))) } }));
+}
+export function serializeStudioLibrary(projects: readonly Project[]): string {
+  return JSON.stringify(projects.map(project => toEnvelope(project)));
+}
+export function readStudioProjects(): { projects: Project[]; error: string } {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (!data) return { projects: [freshStudioProject(exampleProject())], error: '' };
+    const parsed: unknown = JSON.parse(data);
+    if (!Array.isArray(parsed)) throw new Error('Invalid library');
+    const projects: Project[] = [], messages: string[] = [], ids = new Set<string>();
+    for (const item of parsed) {
+      const decoded = decodeProject(item);
+      if (decoded.status !== 'resolved') { messages.push(...decoded.diagnostics.map(issue => issue.message)); continue; }
+      if (ids.has(decoded.value.id)) { messages.push('Duplicate library project identity was preserved in the original backup.'); continue; }
+      ids.add(decoded.value.id); projects.push(toEditorProject(decoded.value));
+      messages.push(...decoded.diagnostics.filter(issue => issue.severity === 'warning').map(issue => issue.message));
+    }
+    return { projects: projects.length ? projects : [freshStudioProject(exampleProject())], error: messages.length ? `Saved data needs recovery. Valid projects are available; the original library will not be overwritten until you export it. ${messages[0]}` : '' };
+  } catch {
+    return { projects: [freshStudioProject(exampleProject())], error: 'Saved data could not be read. Export the original library before enabling saving.' };
+  }
 }

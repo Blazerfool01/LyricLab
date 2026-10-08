@@ -1,6 +1,6 @@
 # Engine Foundation architecture
 
-Status: A–H approved by the project owner. This document records the agreed architecture. Stages A–C provide contracts, fixed v0.1 fixtures, catalogs, streams, and independent analysis/evaluation/style boundaries. Stage D adds shared atomic protection/application and dialect previews. Stage E adds catalog composition and bounded candidate search. Stage F adds annotation-backed preceding-section state and role-aware composition. Stage G adds project-envelope migration, exact-profile replay, and portable SongSpec projection. Stage H remains implementation work; the new persistence and engine paths are activated there rather than by declaring target interfaces.
+Status: A–H approved by the project owner. This document records the agreed architecture. Stages A–C provide contracts, fixed v0.1 fixtures, catalogs, streams, and independent analysis/evaluation/style boundaries. Stage D adds shared atomic protection/application and dialect previews. Stage E adds catalog composition and bounded candidate search. Stage F adds annotation-backed preceding-section state and role-aware composition. Stage G adds project-envelope migration, exact-profile replay, and portable SongSpec projection. Stage H activates the proven boundaries in the offline workspace; implementation and verification evidence are in ENGINE_IMPLEMENTATION_LOG.md.
 
 Read this together with [ENGINE_VERSIONING.md](ENGINE_VERSIONING.md), [the product roadmap](ROADMAP.md), and [current SongSpec documentation](SONGSPEC.md).
 
@@ -146,7 +146,7 @@ Characterize the current behavior first. Keep current entry points as facades. E
 | E | Legacy composer adapter, bounded attempts, ranking/exhaustion | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
 | F | Typed roles, annotation provenance, deterministic narrative state | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
 | G | Replay records, v1 migration, separate SongSpec projection | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
-| H | Workflow/offline regression and dependency-boundary verification | Approved, pending |
+| H | Workflow/offline regression and dependency-boundary verification | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
 
 ## Stage A Definition of Done
 
@@ -162,22 +162,22 @@ Characterize the current behavior first. Keep current entry points as facades. E
 
 ## Full Engine Foundation Definition of Done (A–H)
 
-- [ ] Immutable pure engine contracts are implemented independently of React/browser APIs.
-- [ ] Existing packs have validated, versioned indexed catalogue snapshots; no dataset expansion.
-- [ ] Composition, transformation, analysis, evaluation, selection, and application are independently testable.
-- [ ] Attempts are bounded, ordering is stable, evaluation is explainable, and exhaustion is explicit.
-- [ ] Every text-changing operation uses shared protection and atomic/stale application checks.
-- [ ] Authored/locked text survives generation, dialect operations, imports, and stale results.
-- [ ] Section regeneration does not change style randomness or unrelated recipes.
-- [ ] Accepted hooks retain archetype, seed, scope, and exact profile.
-- [ ] Replay fixtures cover dependency order, rejection, protected context, and serialization.
-- [ ] Narrative state distinguishes intent, accepted evidence, and unknown manual meaning.
-- [ ] Rejected candidates cannot affect state; narrative reduction is deterministic.
-- [ ] Decoding, repair, migration, and SongSpec projection have distinct contracts/diagnostics.
-- [ ] v1 migration preserves text, locks, and unresolved references.
-- [ ] v0.1 behavior remains supported by compatibility adapters.
-- [ ] Browser and network-disabled workflows pass after integration.
-- [ ] Version guarantees and legacy replay limits are documented.
+- [x] Immutable pure engine contracts are implemented independently of React/browser APIs.
+- [x] Existing packs have validated, versioned indexed catalogue snapshots; no dataset expansion.
+- [x] Composition, transformation, analysis, evaluation, selection, and application are independently testable.
+- [x] Attempts are bounded, ordering is stable, evaluation is explainable, and exhaustion is explicit.
+- [x] Every engine text-changing operation uses shared protection and atomic/stale application checks.
+- [x] Authored/locked text survives generation, dialect operations, imports, and stale results.
+- [x] Section regeneration does not change style randomness or unrelated recipes.
+- [x] Accepted hooks retain archetype, seed, scope, and exact profile.
+- [x] Replay fixtures cover dependency order, rejection, protected context, and serialization.
+- [x] Narrative state distinguishes intent, accepted evidence, and unknown manual meaning.
+- [x] Rejected candidates cannot affect state; narrative reduction is deterministic.
+- [x] Decoding, repair, migration, and SongSpec projection have distinct contracts/diagnostics.
+- [x] v1 migration preserves text, locks, and unresolved references.
+- [x] v0.1 behavior remains supported by compatibility adapters.
+- [x] Browser and network-disabled workflows pass after integration.
+- [x] Version guarantees and legacy replay limits are documented.
 
 ## Approval record
 

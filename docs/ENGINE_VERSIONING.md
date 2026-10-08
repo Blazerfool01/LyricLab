@@ -1,6 +1,6 @@
 # Engine Foundation version and replay policy
 
-Status: policy recorded in Stage A; A–F engines are implemented. Stage G implements project-envelope v2, SongSpec v1, migration, and supported-profile replay. Stage H activates the workflow boundaries.
+Status: policy recorded in Stage A; A–F engines are implemented. Stage G implements project-envelope v2, SongSpec v1, migration, and supported-profile replay. Stage H activates the workflow boundaries in the offline workspace.
 
 ## Independent version axes
 
