@@ -1,15 +1,12 @@
 import { containsPhrase } from './analysis';
 import { fingerprint } from './randomness';
-import type { CandidateEvaluation, CandidateEvaluator, ConstraintEvaluator, ContextLine, Diagnostic, DocumentLine, GenerationContext, LyricCandidate, TextAnalysis } from './contracts';
+import { isLineProtected } from './editing';
+import type { CandidateEvaluation, CandidateEvaluator, ConstraintEvaluator, ContextLine, Diagnostic, GenerationContext, LyricCandidate, TextAnalysis } from './contracts';
 
 export const supportedRuleIds = ['avoided', 'cliche', 'cadence', 'rhyme', 'repetition', 'perspective'] as const;
 const hardEligible = new Set(['avoided', 'cliche']);
 const cliches = ['heart of gold', 'chasing dreams', 'broken wings'];
 const diagnostic = (ruleId: string, message: string, lineIds: readonly string[] = [], severity: Diagnostic['severity'] = 'warning', origin: Diagnostic['origin'] = 'context'): Diagnostic => ({ ruleId, message, lineIds, severity, origin });
-function protectedLine(context: GenerationContext, line: DocumentLine): boolean {
-  const section = context.request.document.sections.find(section => section.sectionId === context.section.id);
-  return !!section?.locked || line.locked || line.lockedRanges.length > 0 || ((line.origin === 'authored' || line.origin === 'unknown') && context.request.replacementPolicy.authored !== 'replace-explicitly');
-}
 /** Provisional text only; this helper never applies a candidate to the accepted document. */
 export function candidateContextLines(candidate: LyricCandidate, context: GenerationContext): readonly ContextLine[] {
   if (typeof candidate.id !== 'string' || !candidate.id.trim() || !Number.isInteger(candidate.ordinal) || candidate.ordinal < 0 || !Array.isArray(candidate.lines) || !candidate.lines.length) throw new Error('Candidate requires an ID, nonnegative ordinal and nonempty lines');
@@ -24,14 +21,14 @@ export function candidateContextLines(candidate: LyricCandidate, context: Genera
   for (const line of candidate.lines) {
     const existing = section.lines.find(existing => existing.id === line.targetLineId);
     if (!existing || !context.request.targetLineIds.includes(line.targetLineId) || updates.has(line.targetLineId)) throw new Error('Invalid candidate target mapping');
-    if (protectedLine(context, existing)) throw new Error('Candidate targets protected content');
+    if (isLineProtected(section, existing, context.request.replacementPolicy)) throw new Error('Candidate targets protected content');
     updates.set(line.targetLineId, line.text);
   }
-  return section.lines.map(line => ({ lineId: line.id, sectionId: section.sectionId, text: updates.get(line.id) ?? line.text, origin: updates.has(line.id) ? 'generated' : 'context', protected: protectedLine(context, line) }));
+  return section.lines.map(line => ({ lineId: line.id, sectionId: section.sectionId, text: updates.get(line.id) ?? line.text, origin: updates.has(line.id) ? 'generated' : 'context', protected: isLineProtected(section, line, context.request.replacementPolicy) }));
 }
 function contextLines(context: GenerationContext): readonly ContextLine[] {
   const section = context.request.document.sections.find(section => section.sectionId === context.section.id);
-  const lines = section?.lines.map(line => ({ lineId: line.id, sectionId: section.sectionId, text: line.text, protected: protectedLine(context, line) })) || [];
+  const lines = section?.lines.map(line => ({ lineId: line.id, sectionId: section.sectionId, text: line.text, protected: isLineProtected(section, line, context.request.replacementPolicy) })) || [];
   const overrides = new Map(context.neighbors.map(line => [line.lineId, line]));
   return lines.map(line => { const override = overrides.get(line.lineId); return override ? { ...line, text: override.text, origin: override.origin } : line; });
 }
