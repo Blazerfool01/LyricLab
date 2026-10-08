@@ -129,7 +129,14 @@ export interface CatalogView<T> {
   get(id: StableId): T | undefined;
   all(): readonly T[];
 }
+export interface ChoiceDefinition {
+  readonly id: StableId;
+  readonly label: string;
+  readonly category: string;
+  readonly range?: readonly [number, number];
+}
 export interface CatalogSnapshot {
+  readonly choices: CatalogView<ChoiceDefinition>;
   readonly packs: readonly PackRef[];
   readonly genres: CatalogView<GenreDefinition>;
   readonly traits: CatalogView<TraitDefinition>;
@@ -256,6 +263,8 @@ export interface GenerationRequest {
   readonly budget: SearchBudget;
 }
 export interface ContextLine {
+  /** Provisional composition provenance; protection is always derived from the document. */
+  readonly origin?: "generated" | "context";
   readonly lineId: StableId;
   readonly sectionId: StableId;
   readonly text: string;
@@ -310,6 +319,7 @@ export interface Diagnostic {
   readonly message: string;
 }
 export interface LineMeasurement {
+  readonly textFingerprint: Fingerprint;
   readonly lineId: StableId;
   readonly syllables: number;
   readonly confidence: "known" | "estimated" | "unknown";
