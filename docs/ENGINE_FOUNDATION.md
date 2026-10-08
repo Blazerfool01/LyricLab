@@ -1,6 +1,6 @@
 # Engine Foundation architecture
 
-Status: A–H approved by the project owner. This document records the agreed architecture. Stages A–C provide contracts, fixed v0.1 fixtures, catalogs, streams, and independent analysis/evaluation/style boundaries. Stage D adds shared atomic protection/application and dialect previews. Stage E adds catalog composition and bounded candidate search. Stages F–H remain implementation work; their behavior is not active merely because a target interface exists.
+Status: A–H approved by the project owner. This document records the agreed architecture. Stages A–C provide contracts, fixed v0.1 fixtures, catalogs, streams, and independent analysis/evaluation/style boundaries. Stage D adds shared atomic protection/application and dialect previews. Stage E adds catalog composition and bounded candidate search. Stage F adds annotation-backed preceding-section state and role-aware composition. Stages G–H remain implementation work; their behavior is not active merely because a target interface exists.
 
 Read this together with [ENGINE_VERSIONING.md](ENGINE_VERSIONING.md), [the product roadmap](ROADMAP.md), and [current SongSpec documentation](SONGSPEC.md).
 
@@ -144,7 +144,7 @@ Characterize the current behavior first. Keep current entry points as facades. E
 | C | Independent analyzers, shared diagnostics, hard/soft evaluation | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
 | D | Common protection/application, atomic/stale patches | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
 | E | Legacy composer adapter, bounded attempts, ranking/exhaustion | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
-| F | Typed roles, annotation provenance, deterministic narrative state | Approved, pending |
+| F | Typed roles, annotation provenance, deterministic narrative state | Implemented; evidence in ENGINE_IMPLEMENTATION_LOG.md |
 | G | Replay records, v1 migration, separate SongSpec projection | Approved, pending |
 | H | Workflow/offline regression and dependency-boundary verification | Approved, pending |
 
