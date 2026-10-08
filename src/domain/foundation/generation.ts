@@ -191,10 +191,12 @@ export function createGenerationCoordinator(options: CoordinatorOptions = {}): G
       if (language.status !== 'resolved') return language;
       const section = request.blueprint.sections.find(section => section.id === request.sectionId)!;
       let context: GenerationContext = { request, section, language: language.value, narrative: { assertions: [], goals: [], motifIds: [], provenance: {} }, neighbors: [], catalog: snapshot };
+      let narrativeDiagnostics: readonly Diagnostic[] = [];
       if (registered.narrativeReducer) {
         const state = registered.narrativeReducer.derive(request.blueprint, request.document, section.id);
         if (state.status !== 'resolved') return state;
         context = { ...context, narrative: state.value };
+        narrativeDiagnostics = state.diagnostics;
       }
       const planned = structurePlanner.plan(context);
       if (planned.status !== 'resolved') return planned;
@@ -232,9 +234,10 @@ export function createGenerationCoordinator(options: CoordinatorOptions = {}): G
           }
           const provisional = candidateContextLines(candidate, context);
           const analysis = textAnalyzer.analyze(provisional, snapshot.pronunciations);
-          const evaluation = candidateEvaluator.evaluate(candidate, context, analysis);
+          const measuredEvaluation = candidateEvaluator.evaluate(candidate, context, analysis);
+          const evaluation = narrativeDiagnostics.length ? { ...measuredEvaluation, diagnostics: [...measuredEvaluation.diagnostics, ...narrativeDiagnostics] } : measuredEvaluation;
           if (!evaluation.admissible) { rejectionDiagnostics.push(...evaluation.diagnostics.filter(issue => issue.severity === 'error')); continue; }
-          const content = fingerprint([...candidate.lines].sort((a, b) => compare(a.targetLineId, b.targetLineId)).map(line => ({ targetLineId: line.targetLineId, text: line.text, annotations: line.annotations })));
+          const content = fingerprint([...candidate.lines].sort((a, b) => compare(a.targetLineId, b.targetLineId)).map(line => ({ targetLineId: line.targetLineId, text: line.text, annotations: registered.narrativeReducer ? line.annotations.map(annotation => ({ evidence: annotation.evidence, effect: annotation.effect.kind === 'assert' ? { kind: 'assert', assertion: { ...annotation.effect.assertion, id: 'fact-instance' } } : annotation.effect })) : line.annotations })));
           if (seen.has(content)) continue;
           seen.add(content); candidates.push({ candidate, evaluation });
         } catch (error) { return failure('invalid-input', error instanceof Error ? error.message : 'Invalid composer output'); }
