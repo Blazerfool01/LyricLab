@@ -4,7 +4,7 @@ A standalone, client-only songwriting studio built with React, Vite, and TypeScr
 
 ## Canonical repository
 
-[immviolatingskids-cell/LyricLab](https://github.com/immviolatingskids-cell/LyricLab) is the source of truth for code, tests, and documentation. The `main` branch holds the accepted baseline. Future changes should arrive through branches and pull requests with the checks below.
+[Blazerfool01/LyricLab](https://github.com/Blazerfool01/LyricLab) is the source of truth for code, tests, and documentation. The `main` branch holds the accepted baseline. Future changes should arrive through branches and pull requests with the checks below.
 
 - [Product principles and milestone roadmap](docs/ROADMAP.md)
 - [Development and contribution workflow](docs/DEVELOPMENT.md)
