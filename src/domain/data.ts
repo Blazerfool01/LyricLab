@@ -1,4 +1,4 @@
-export const genres = [
+export const legacyGenres = [
   {
     id: "indie-folk",
     name: "Indie folk",
@@ -110,7 +110,275 @@ export const genres = [
     bpm: [75, 120],
   },
 ];
-export const moods = [
+export const genreAdditions = [
+  {
+    id: "rap",
+    name: "Rap",
+    family: "Hip-hop",
+    descriptors: [
+      "rhythm-led rap phrasing and clear bar structure",
+      "punchy sampled or programmed drums",
+      "bass-forward beat with room for the vocal",
+    ],
+    bpm: [70, 120],
+  },
+  {
+    id: "trap",
+    name: "Trap",
+    family: "Hip-hop",
+    descriptors: [
+      "rolling hi-hat subdivisions and sharp snare accents",
+      "deep 808 bass slides",
+      "sparse melodic loops with space for the vocal",
+    ],
+    bpm: [60, 160],
+  },
+  {
+    id: "drill",
+    name: "Drill",
+    family: "Hip-hop",
+    descriptors: [
+      "sliding sub-bass patterns",
+      "syncopated drill drum accents",
+      "stark minor-key loops with deliberate space",
+    ],
+    bpm: [65, 150],
+  },
+  {
+    id: "grime",
+    name: "Grime",
+    family: "Hip-hop",
+    descriptors: [
+      "brisk UK garage-rooted rhythmic framework",
+      "sharp square-wave synth stabs",
+      "sparse percussion that leaves room for rapid MC flows",
+    ],
+    bpm: [130, 145],
+  },
+  {
+    id: "phonk",
+    name: "Phonk",
+    family: "Hip-hop",
+    descriptors: [
+      "distorted Memphis-inspired vocal chops",
+      "cowbell-led melodic motifs",
+      "saturated low end and clipped programmed drums",
+    ],
+    bpm: [100, 160],
+  },
+  {
+    id: "boom-bap",
+    name: "Boom bap",
+    family: "Hip-hop",
+    descriptors: [
+      "sample-driven loops with a dusty texture",
+      "hard kick-and-snare backbeat",
+      "steady head-nod groove with space for the verse",
+    ],
+    bpm: [80, 105],
+  },
+  {
+    id: "lo-fi-hip-hop",
+    name: "Lo-fi hip-hop",
+    family: "Hip-hop",
+    descriptors: [
+      "softly swung sampled drums",
+      "mellow keyboard loops and warm bass",
+      "tape-like saturation with softened transients",
+    ],
+    bpm: [60, 95],
+  },
+  {
+    id: "cloud-rap",
+    name: "Cloud rap",
+    family: "Hip-hop",
+    descriptors: [
+      "weightless vocal phrasing over spacious beats",
+      "hazy synthesizer layers",
+      "subtle trap-influenced percussion and soft sub-bass",
+    ],
+    bpm: [60, 120],
+  },
+  {
+    id: "pop",
+    name: "Pop",
+    family: "Pop",
+    descriptors: [
+      "direct, memorable melodic hooks",
+      "balanced contemporary rhythm section",
+      "clear vocal-forward arrangement",
+    ],
+    bpm: [90, 130],
+  },
+  {
+    id: "dance-pop",
+    name: "Dance-pop",
+    family: "Pop",
+    descriptors: [
+      "four-on-the-floor dance pulse",
+      "bright synthesizer hooks",
+      "high-energy vocal chorus with a clear build",
+    ],
+    bpm: [110, 130],
+  },
+  {
+    id: "synth-pop",
+    name: "Synth-pop",
+    family: "Pop",
+    descriptors: [
+      "prominent analog synthesizer melodies",
+      "steady electronic drums",
+      "polished pop structure with a strong melodic refrain",
+    ],
+    bpm: [90, 125],
+  },
+  {
+    id: "k-pop",
+    name: "K-pop",
+    family: "Pop",
+    descriptors: [
+      "high-contrast section changes and tightly shaped transitions",
+      "layered vocal hooks and harmonies",
+      "precise electronic and pop production",
+    ],
+    bpm: [100, 140],
+  },
+  {
+    id: "hard-rock",
+    name: "Hard rock",
+    family: "Rock",
+    descriptors: [
+      "crunching electric-guitar riffs",
+      "driving live drum performance",
+      "powerful vocal-led choruses",
+    ],
+    bpm: [100, 150],
+  },
+  {
+    id: "punk-rock",
+    name: "Punk rock",
+    family: "Rock",
+    descriptors: [
+      "fast, direct power-chord progressions",
+      "urgent live drum grooves",
+      "raw and concise band arrangements",
+    ],
+    bpm: [140, 190],
+  },
+  {
+    id: "pop-punk",
+    name: "Pop punk",
+    family: "Rock",
+    descriptors: [
+      "bright guitar-driven hooks",
+      "fast, punchy drum patterns",
+      "melodic vocal choruses over power chords",
+    ],
+    bpm: [120, 180],
+  },
+  {
+    id: "heavy-metal",
+    name: "Heavy metal",
+    family: "Rock",
+    descriptors: [
+      "high-gain electric-guitar riffs",
+      "dense distorted guitar layers",
+      "driving double-kick or heavy drum patterns",
+    ],
+    bpm: [80, 180],
+  },
+  {
+    id: "edm",
+    name: "EDM",
+    family: "Electronic",
+    descriptors: [
+      "build-and-release arrangement with a clear drop",
+      "synth-led dance hooks",
+      "programmed club percussion and deep bass",
+    ],
+    bpm: [110, 150],
+  },
+  {
+    id: "techno",
+    name: "Techno",
+    family: "Electronic",
+    descriptors: [
+      "repetitive four-on-the-floor pulse",
+      "hypnotic sequenced synthesizer patterns",
+      "gradual textural development over a steady groove",
+    ],
+    bpm: [120, 150],
+  },
+  {
+    id: "house",
+    name: "House",
+    family: "Electronic",
+    descriptors: [
+      "steady four-on-the-floor kick",
+      "syncopated bass and chord stabs",
+      "warm looping club groove",
+    ],
+    bpm: [115, 130],
+  },
+  {
+    id: "trance",
+    name: "Trance",
+    family: "Electronic",
+    descriptors: [
+      "driving four-on-the-floor rhythm",
+      "long rising synthesizer arpeggios",
+      "wide sustained melodic layers",
+    ],
+    bpm: [125, 145],
+  },
+  {
+    id: "drum-and-bass",
+    name: "Drum & bass",
+    family: "Electronic",
+    descriptors: [
+      "fast breakbeat drum programming",
+      "rolling bassline with deep sub-bass",
+      "syncopated rhythmic momentum",
+    ],
+    bpm: [160, 180],
+  },
+  {
+    id: "dubstep",
+    name: "Dubstep",
+    family: "Electronic",
+    descriptors: [
+      "half-time drum patterns with syncopated accents",
+      "modulated bass design",
+      "contrasting drops and spacious breakdowns",
+    ],
+    bpm: [70, 150],
+  },
+  {
+    id: "chillout",
+    name: "Chillout",
+    family: "Electronic",
+    descriptors: [
+      "slow, relaxed electronic grooves",
+      "soft pad layers and delicate textures",
+      "light percussion with a spacious mix",
+    ],
+    bpm: [60, 110],
+  },
+  {
+    id: "chillhop",
+    name: "Chillhop",
+    family: "Hip-hop",
+    descriptors: [
+      "laid-back hip-hop drum swing",
+      "warm sampled keys and rounded bass",
+      "mellow loop-based arrangement",
+    ],
+    bpm: [70, 100],
+  },
+];
+export const genres = [...legacyGenres, ...genreAdditions];
+
+export const legacyMoods = [
   "Reflective",
   "Hopeful",
   "Melancholic",
@@ -122,6 +390,7 @@ export const moods = [
   "Defiant",
   "Nostalgic",
 ];
+export const moods = [...legacyMoods, "Chill"];
 export const instruments = [
   "Acoustic guitar",
   "Ambient pads",

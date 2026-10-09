@@ -20,6 +20,10 @@ Do not use the npm app version or Project schema version as a substitute for an 
 
 The checked-in fixture records stable inputs and literal outputs. Its legacy outputs include existing limitations, not desired target behavior. The current code remains the source implementation during Stage A. Later adapters must retain these outputs for the legacy profile. A deliberate fix belongs to a new algorithm/profile with its own reviewed fixtures; do not rewrite the legacy golden to make a refactor pass.
 
+## Additive style catalog
+
+The original `legacy-v0.1` pack remains pinned at `fnv1a-v1-7e737857`. The expanded genre/style profiles and the independent `Chill` mood live in `genre-style-expansion-v1` version `1.0.0`, fingerprinted as `fnv1a-v1-ef385413`, so they do not rewrite the legacy catalog fingerprint. The current generation and narrative profiles bind the new pack; the prior base, generation, and narrative profiles remain registered against their original catalog snapshots for exact replay. Project and SongSpec schema versions are unchanged. Changes to the expansion pack's declarative content require a new content hash and the corresponding pack version update.
+
 ## Determinism
 
 New requests validate unsigned 32-bit root seeds and nonnegative integer variation counters at the boundary. Preserve legacy `>>> 0` seed coercion in the legacy adapter rather than silently applying new validation to saved v1 inputs. Different seeds are not promised to produce unique lyrics.

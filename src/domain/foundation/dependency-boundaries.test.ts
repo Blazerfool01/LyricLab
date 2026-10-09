@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
-import { dirname, join, relative, resolve } from 'node:path';
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import ts from 'typescript';
 
 const domainRoot = resolve(process.cwd(), 'src/domain');
@@ -46,7 +46,8 @@ describe('foundation runtime dependency boundaries', () => {
       for (const specifier of findings.imports) {
         if (!specifier.startsWith('.')) { violations.push(`${relative(domainRoot, file)} imports external runtime dependency ${specifier}`); continue; }
         const dependency = resolve(dirname(file), specifier.endsWith('.ts') ? specifier : `${specifier}.ts`);
-        if (!dependency.startsWith(`${domainRoot}/`) || dependency === join(domainRoot, 'project.ts')) { violations.push(`${relative(domainRoot, file)} imports browser/project boundary ${specifier}`); continue; }
+        const dependencyFromDomain = relative(domainRoot, dependency);
+        if (dependencyFromDomain === '..' || dependencyFromDomain.startsWith(`..${sep}`) || isAbsolute(dependencyFromDomain) || dependency === join(domainRoot, 'project.ts')) { violations.push(`${relative(domainRoot, file)} imports browser/project boundary ${specifier}`); continue; }
         pending.push(dependency);
       }
     }

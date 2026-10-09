@@ -1,4 +1,4 @@
-import { catalog, generationCatalog, freeze, immutableView } from './catalogs';
+import { catalog, generationCatalog, legacyGenerationCatalog, freeze, immutableView } from './catalogs';
 import { createDefaultProfile, createGenerationCoordinator, defaultProfile, legacyCandidateGenerator } from './generation';
 import { applyTemplateEffects, narrativeReducer } from './narrative';
 import { fingerprint } from './randomness';
@@ -16,13 +16,25 @@ export const effectManifest: Readonly<Record<string, readonly TemplateEffectDecl
   'theme:home:verse:1': [motif('theme:home:object:3')],
   'legacy:statement:1': [claim], 'legacy:statement:4': [claim],
 });
-export const narrativeCatalog: CatalogSnapshot = freeze({ ...generationCatalog,
-  templates: immutableView(generationCatalog.templates.all().map(template => ({ ...template, effects: effectManifest[template.id] || template.effects }))),
-  packs: [...generationCatalog.packs, { id: 'narrative-metadata', version: '1.0.0', contentHash: fingerprint(effectManifest) }],
-});
-export const narrativeProfile = freeze({ ...defaultProfile, packs: narrativeCatalog.packs,
-  algorithms: { ...defaultProfile.algorithms, composition: { id: 'annotated-pattern-composition', version: '1.0.0' }, narrative: { id: 'accepted-annotation-reduction', version: '1.0.0' }, selection: { id: 'bounded-candidate-search', version: '2.0.0' } },
-});
+function narrativeCatalogFor(source: CatalogSnapshot): CatalogSnapshot {
+  return freeze({ ...source,
+    templates: immutableView(source.templates.all().map(template => ({ ...template, effects: effectManifest[template.id] || template.effects }))),
+    packs: [...source.packs, { id: 'narrative-metadata', version: '1.0.0', contentHash: fingerprint(effectManifest) }],
+  });
+}
+function narrativeProfileFor(sourceProfile: ReturnType<typeof createDefaultProfile>, sourceCatalog: CatalogSnapshot) {
+  const snapshot = narrativeCatalogFor(sourceCatalog);
+  return freeze({ profile: freeze({ ...sourceProfile, packs: snapshot.packs,
+    algorithms: { ...sourceProfile.algorithms, composition: { id: 'annotated-pattern-composition', version: '1.0.0' }, narrative: { id: 'accepted-annotation-reduction', version: '1.0.0' }, selection: { id: 'bounded-candidate-search', version: '2.0.0' } },
+  }), catalog: snapshot });
+}
+const currentNarrative = narrativeProfileFor(defaultProfile, generationCatalog);
+const legacyNarrative = narrativeProfileFor(createDefaultProfile(legacyGenerationCatalog), legacyGenerationCatalog);
+export const narrativeCatalog = currentNarrative.catalog;
+export const narrativeProfile = currentNarrative.profile;
+/** Historical exact profile retained for projects created before the style-pack expansion. */
+export const legacyNarrativeCatalog = legacyNarrative.catalog;
+export const legacyNarrativeProfile = legacyNarrative.profile;
 export const narrativeComposer: CandidateGenerator = {
   compose(context, plan, random, ordinal) {
     // Roles choose a part of the existing bank; accepted motifs discourage repeated images.
@@ -51,5 +63,7 @@ export const narrativeComposer: CandidateGenerator = {
 export const foundationCoordinator = createGenerationCoordinator({ profiles: [
   { profile: narrativeProfile, catalog: narrativeCatalog, composer: narrativeComposer, narrativeReducer },
   { profile: defaultProfile, catalog: generationCatalog },
+  { profile: legacyNarrativeProfile, catalog: legacyNarrativeCatalog, composer: narrativeComposer, narrativeReducer },
+  { profile: createDefaultProfile(legacyGenerationCatalog), catalog: legacyGenerationCatalog },
   { profile: createDefaultProfile(catalog), catalog },
 ] });

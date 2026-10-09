@@ -91,6 +91,8 @@ Definition of Done:
 - Core logic is separated from React.
 - Critical engine tests pass.
 
+Current catalog evidence: the style picker has 34 profiles across eight broad families. Mood remains independent of genre/style: `Dark` and `Chill` can modify Rap, Trap, Techno, or another style without creating a compound genre entry. The original `legacy-v0.1` data fingerprint remains pinned; the added styles and Chill mood use the separately versioned `genre-style-expansion-v1` pack. This is a catalog expansion only and does not complete the v1.0 release gate.
+
 ## v0.2 — Song Blueprint & Structure Engine
 
 Goal: turn style choices into a song plan with sectional purpose, intensity, and constraints.

@@ -2,12 +2,12 @@
 import type { Project, SongSection, StyleSpec } from '../types';
 import { emptyEngineState, fromLegacyProject, labelFor, referenceFor } from './adapters';
 import type { EditorEngineState } from './adapters';
-import { catalog, generationCatalog } from './catalogs';
+import { catalog, generationCatalog, legacyGenerationCatalog } from './catalogs';
 import type { CatalogSnapshot, Diagnostic, DocumentLine, DocumentSection, ExecutionProfile, GenerationContext, GenerationRequest, LyricCandidate, ProjectEnvelope, ReplayRecipe, Resolution, SectionIntent, SemanticAnnotation, SongBlueprint, SongSpec, TextRange } from './contracts';
 import { outputFingerprint, validateDocument, withRevision } from './editing';
 import { canonical, fingerprint, validateSeed } from './randomness';
 import { createDefaultProfile, createGenerationCoordinator, legacyCandidateGenerator, MAX_ATTEMPTS, MAX_CANDIDATES } from './generation';
-import { foundationCoordinator, narrativeCatalog, narrativeComposer, narrativeProfile } from './narrative-generation';
+import { foundationCoordinator, legacyNarrativeCatalog, legacyNarrativeProfile, narrativeCatalog, narrativeComposer, narrativeProfile } from './narrative-generation';
 import { narrativeReducer } from './narrative';
 import { candidateContextLines, candidateEvaluator } from './constraints';
 import { dialectTransformer } from './dialect';
@@ -306,6 +306,8 @@ export function projectSongSpec(envelope: ProjectEnvelope, snapshot: CatalogSnap
 const replayProfiles = [
   { profile: narrativeProfile, catalog: narrativeCatalog, composer: narrativeComposer, narrativeReducer },
   { profile: createDefaultProfile(generationCatalog), catalog: generationCatalog, composer: legacyCandidateGenerator },
+  { profile: legacyNarrativeProfile, catalog: legacyNarrativeCatalog, composer: narrativeComposer, narrativeReducer },
+  { profile: createDefaultProfile(legacyGenerationCatalog), catalog: legacyGenerationCatalog, composer: legacyCandidateGenerator },
   { profile: createDefaultProfile(catalog), catalog, composer: legacyCandidateGenerator },
 ];
 function profileKey(profile: ExecutionProfile): string { return fingerprint({ ...profile, packs: [...profile.packs].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0) }); }

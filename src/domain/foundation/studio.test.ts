@@ -7,7 +7,7 @@ import { freeze } from './catalogs';
 import { withRevision } from './editing';
 import { decodeProject, replayRecipe, serializeProject, toEditorProject, toEnvelope } from './persistence';
 import { fingerprint } from './randomness';
-import { acceptHook, analyzeStudioSection, applyStudioDialect, compileStudioStyle, duplicateStudioSection, previewHooks, previewStudioDialect, regenerateProject, setStudioRole } from './studio';
+import { acceptHook, analyzeStudioSection, applyStudioDialect, compileStudioStyle, duplicateStudioSection, previewHooks, previewStudioDialect, regenerateProject, resolveStudioStyle, setStudioRole } from './studio';
 import type { StudioResult } from './studio';
 
 const legacy = legacyFixture.input.project as unknown as Project;
@@ -24,6 +24,17 @@ function alterDocument(source: Project, modify: (document: ProjectEnvelope['docu
 }
 
 describe('studio regeneration uses durable intent and accepted history', () => {
+  it('resolves added styles for editor blend weights and guidance', () => {
+    const source = project();
+    source.style.genres = [{ id: 'rap', weight: 70 }, { id: 'trap', weight: 30 }];
+    source.style.bpm = 108;
+    const result = resolveStudioStyle(source);
+    expect(result.status).toBe('resolved');
+    if (result.status !== 'resolved') return;
+    expect(result.value.genres.map(genre => [genre.id, genre.weight])).toEqual([['rap', 70], ['trap', 30]]);
+    expect(result.diagnostics).toEqual([]);
+  });
+
   it('never changes root seed/style, advances only the chosen key and records exactly replayable accepted drafts', () => {
     const source = freeze(project()), original = toEnvelope(source), prompt = compileStudioStyle(source, 'Detailed');
     const first = applied(regenerateProject(source, sectionId)), envelope = toEnvelope(first), recipe = envelope.recipes[0];

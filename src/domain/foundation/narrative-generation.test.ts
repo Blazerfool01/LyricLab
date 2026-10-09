@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import fixture from './generation-fixture.json';
 import narrativeFixture from './narrative-fixture.json';
-import { generationCatalog, freeze } from './catalogs';
+import { generationCatalog, legacyGenerationCatalog, freeze } from './catalogs';
 import { documentApplicator, withRevision } from './editing';
 import { defaultEvaluationPolicy, makeRecipe } from './generation';
-import { effectManifest, foundationCoordinator, narrativeCatalog, narrativeProfile } from './narrative-generation';
+import { effectManifest, foundationCoordinator, legacyNarrativeCatalog, legacyNarrativeProfile, narrativeCatalog, narrativeProfile } from './narrative-generation';
 import { narrativeReducer } from './narrative';
 import { makeTestContext } from './test-context';
 import type { GenerationRequest, GenerationResult } from './contracts';
@@ -15,10 +15,11 @@ function request(): GenerationRequest {
 function ready(result: GenerationResult) { if (result.status !== 'ready') throw new Error(JSON.stringify(result)); return result; }
 describe('annotation-backed composition', () => {
   it('reproduces the literal historical F profile result', () => {
-    expect(foundationCoordinator.generate(narrativeFixture.request as unknown as GenerationRequest, narrativeCatalog)).toEqual(narrativeFixture.expected);
+    expect(legacyNarrativeProfile).toEqual((narrativeFixture.request as unknown as GenerationRequest).profile);
+    expect(foundationCoordinator.generate(narrativeFixture.request as unknown as GenerationRequest, legacyNarrativeCatalog)).toEqual(narrativeFixture.expected);
   });
   it('retains the literal E profile result through the new registry', () => {
-    expect(foundationCoordinator.generate(fixture.request as unknown as GenerationRequest, generationCatalog)).toEqual(fixture.expected);
+    expect(foundationCoordinator.generate(fixture.request as unknown as GenerationRequest, legacyGenerationCatalog)).toEqual(fixture.expected);
   });
   it('uses roles to distinguish existing establish/develop patterns deterministically', () => {
     const input = freeze(request());

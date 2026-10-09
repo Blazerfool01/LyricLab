@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { genres, palette, moods, instruments, productions, textures, deliveries, themes, cadenceRanges } from '../data';
-import { catalog, createCatalog, immutableView } from './catalogs';
+import { genres, genreAdditions, palette, legacyMoods, moods, instruments, productions, textures, deliveries, themes, cadenceRanges } from '../data';
+import { catalog, expandedCatalog, legacyGenreView, createCatalog, immutableView } from './catalogs';
 import type { FoundationCatalog } from './catalogs';
 
 const codepointSort = (ids: readonly string[]) => [...ids].sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
@@ -104,13 +104,46 @@ describe('existing-pack catalogue snapshot', () => {
   });
 
   it('preserves all existing genre labels, tempo ranges and sound descriptors', () => {
-    expect(catalog.genres.all()).toHaveLength(genres.length);
-    for (const source of genres) {
+    expect(catalog.genres.all()).toHaveLength(legacyGenreView.all().length);
+    for (const source of legacyGenreView.all()) {
       const genre = catalog.genres.get(source.id)!;
       expect(genre.label).toBe(source.name);
       expect(genre.bpmRange).toEqual(source.bpm);
       expect(genre.traitIds.map(id => catalog.traits.get(id)?.label)).toEqual(source.descriptors);
     }
+  });
+
+  it('adds a broad style catalog while keeping moods independent', () => {
+    const expectedIds = [
+      'rap', 'trap', 'drill', 'grime', 'phonk', 'boom-bap', 'lo-fi-hip-hop', 'cloud-rap',
+      'pop', 'dance-pop', 'synth-pop', 'k-pop', 'hard-rock', 'punk-rock', 'pop-punk', 'heavy-metal',
+      'edm', 'techno', 'house', 'trance', 'drum-and-bass', 'dubstep', 'chillout', 'chillhop',
+    ];
+    expect(genres).toHaveLength(34);
+    expect(genres.slice(10).map(genre => genre.id)).toEqual(expectedIds);
+    expect(moods).toContain('Chill');
+    expect(expandedCatalog.genres.all()).toHaveLength(34);
+    expect(new Set(expandedCatalog.genres.all().map(genre => genre.familyId))).toEqual(new Set([
+      'family:folk', 'family:pop', 'family:rnb', 'family:hip-hop',
+      'family:rock', 'family:electronic', 'family:soul', 'family:country',
+    ]));
+    expect(expandedCatalog.choices.get('mood:chill')).toEqual({ id: 'mood:chill', label: 'Chill', category: 'mood' });
+    expect(expandedCatalog.genres.get('trap')?.familyId).toBe('family:hip-hop');
+    expect(expandedCatalog.genres.get('techno')?.familyId).toBe('family:electronic');
+    expect(expandedCatalog.genres.get('hard-rock')?.familyId).toBe('family:rock');
+    for (const source of genreAdditions) {
+      const genre = expandedCatalog.genres.get(source.id)!;
+      expect(genre.label).toBe(source.name);
+      expect(genre.bpmRange).toEqual(source.bpm);
+      expect(genre.traitIds.map(id => expandedCatalog.traits.get(id)?.label)).toEqual(source.descriptors);
+    }
+  });
+
+  it('keeps the legacy pack pinned and adds a separately fingerprinted style pack', () => {
+    expect(catalog.packs).toEqual([{ id: 'legacy-v0.1', version: '1.0.0', contentHash: 'fnv1a-v1-7e737857' }]);
+    expect(expandedCatalog.packs.map(pack => pack.id)).toEqual(['legacy-v0.1', 'genre-style-expansion-v1']);
+    expect(expandedCatalog.packs[1].version).toBe('1.0.0');
+    expect(expandedCatalog.packs[1].contentHash).toBe('fnv1a-v1-ef385413');
   });
 
   it('uses explicit stable family IDs rather than display labels', () => {
@@ -133,7 +166,7 @@ describe('existing-pack catalogue snapshot', () => {
   });
 
   it('preserves existing choice labels and delivery targets by explicit category', () => {
-    const groups = { mood: moods, instrument: instruments, production: productions, texture: textures, delivery: deliveries, theme: themes };
+    const groups = { mood: legacyMoods, instrument: instruments, production: productions, texture: textures, delivery: deliveries, theme: themes };
     for (const [category, labels] of Object.entries(groups)) {
       expect(catalog.choices.all().filter(choice => choice.category === category).map(choice => choice.label).sort()).toEqual([...labels].sort());
     }

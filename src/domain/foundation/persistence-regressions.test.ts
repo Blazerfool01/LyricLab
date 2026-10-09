@@ -3,7 +3,7 @@ import legacy from '../fixtures/legacy-v0.1.json';
 import narrativeFixture from './narrative-fixture.json';
 import { decodeProject, replayRecipe, serializeProject, toEnvelope, toEditorProject } from './persistence';
 import { makeRecipe } from './generation';
-import { foundationCoordinator, narrativeCatalog } from './narrative-generation';
+import { foundationCoordinator, legacyNarrativeCatalog } from './narrative-generation';
 import type { GenerationRequest, ProjectEnvelope } from './contracts';
 import type { Project } from '../types';
 const resolve = (value: unknown): ProjectEnvelope => { const decoded = decodeProject(value); if (decoded.status !== 'resolved') throw new Error(JSON.stringify(decoded)); return decoded.value; };
@@ -26,9 +26,9 @@ describe('conservative storage boundary regressions', () => {
   });
   it('retains inspectable structurally valid recipes when their contract generation is unavailable', () => {
     const request = narrativeFixture.request as unknown as GenerationRequest;
-    const result = foundationCoordinator.generate(request, narrativeCatalog);
+    const result = foundationCoordinator.generate(request, legacyNarrativeCatalog);
     if (result.status !== 'ready') throw new Error('Invalid fixed fixture');
-    const recipe = makeRecipe(request, result.candidates[0].candidate, narrativeCatalog);
+    const recipe = makeRecipe(request, result.candidates[0].candidate, legacyNarrativeCatalog);
     const unsupported = { ...recipe, profile: { ...recipe.profile, contractVersion: 2 } };
     const source = toEnvelope(legacy.input.project as unknown as Project);
     const decoded = resolve({ ...source, recipes: [unsupported] });

@@ -1,5 +1,5 @@
 import { describe,it,expect } from 'vitest';
-import { catalog } from './catalogs';
+import { catalog, expandedCatalog } from './catalogs';
 import { namedRandom } from './randomness';
 import { styleResolver,styleCompiler } from './style';
 import type { StyleIntent } from './contracts';
@@ -33,6 +33,18 @@ describe('independent style resolution and rendering',()=>{
     const result=resolve();if(result.status!=='resolved') throw new Error('Resolution failed');
     const renamed={...result.value,genres:[{id:'uninstalled',label:'Local invented genre',weight:100}]};
     expect(styleCompiler.compile(renamed,'Compact')).toContain('Local invented genre');
+  });
+  it('combines Rap and Trap styles with independent Dark and Chill moods',()=>{
+    const result=styleResolver.resolve({...intent,
+      genres:[{id:'rap',weight:60},{id:'trap',weight:40}],
+      moods:[{id:'mood:dark',weight:50},{id:'mood:chill',weight:50}],
+    },expandedCatalog,namedRandom(2408,['genre-mood-composition']));
+    expect(result.status).toBe('resolved');if(result.status!=='resolved')return;
+    expect(result.value.genres.map(genre=>genre.label)).toEqual(['Rap','Trap']);
+    expect(result.value.moods.map(mood=>mood.label)).toEqual(['Chill','Dark']);
+    const compiled=styleCompiler.compile(result.value,'Detailed');
+    expect(compiled.toLowerCase()).toContain('rap');expect(compiled.toLowerCase()).toContain('trap');
+    expect(compiled.toLowerCase()).toContain('dark');expect(compiled.toLowerCase()).toContain('chill');
   });
   it('aggregates repeated genre weights and deduplicates stable trait IDs',()=>{
     const result=resolve({...intent,genres:[{id:'indie-folk',weight:20},{id:'indie-folk',weight:50},{id:'dream-pop',weight:30}],traitIds:['production:organic','production:organic']});
