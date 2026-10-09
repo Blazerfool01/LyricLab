@@ -3,7 +3,7 @@ import fixtures from '../fixtures/legacy-v0.1.json';
 import type {Project} from '../types';
 import {fromLegacyProject,emptyEngineState,referenceFor,labelFor} from './adapters';
 import {fingerprint} from './randomness';
-import {generationCatalog,catalog} from './catalogs';
+import {generationCatalog,legacyGenerationCatalog,catalog} from './catalogs';
 const project=fixtures.input.project as unknown as Project;
 describe('legacy blueprint/document adapter',()=>{
   it('maps IDs and roles without changing accepted text or input',()=>{
@@ -44,6 +44,9 @@ describe('legacy blueprint/document adapter',()=>{
     expect(catalog.packs[0].contentHash).toBe('fnv1a-v1-7e737857');
     expect(catalog.choices.get('theme:finding')?.claim).toBeUndefined();
     expect(generationCatalog.choices.get('theme:finding')?.claim).toBe('I can be uncertain and still go');
-    expect(generationCatalog.packs.map(p=>p.id)).toEqual(['legacy-v0.1','legacy-claims']);
+    expect(legacyGenerationCatalog.packs.map(p=>p.id)).toEqual(['legacy-v0.1','legacy-claims']);
+    expect(legacyGenerationCatalog.packs[0].contentHash).toBe(catalog.packs[0].contentHash);
+    expect(generationCatalog.packs.map(p=>p.id)).toEqual(['legacy-v0.1','genre-style-expansion-v1','legacy-claims']);
+    expect(generationCatalog.choices.get('mood:chill')?.label).toBe('Chill');
   });
 });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import fixedFixture from './generation-fixture.json';
-import { catalog, generationCatalog, freeze, immutableView } from './catalogs';
+import { catalog, generationCatalog, legacyGenerationCatalog, freeze, immutableView } from './catalogs';
 import { documentApplicator, withRevision } from './editing';
 import { createDefaultProfile, createGenerationCoordinator, defaultEvaluationPolicy, defaultProfile, generationCoordinator, languageResolver, legacyCandidateGenerator, makeRecipe, structurePlanner } from './generation';
 import { namedRandom } from './randomness';
@@ -67,8 +67,19 @@ describe('language and structure resolution', () => {
 describe('bounded deterministic candidate search', () => {
   it('pins literal profile, ranked candidate text/trace/evaluation and selection', () => {
     const input = freeze(fixedFixture.request as unknown as GenerationRequest);
-    expect(defaultProfile).toEqual(input.profile);
-    expect(generationCoordinator.generate(input, generationCatalog)).toEqual(fixedFixture.expected);
+    expect(createDefaultProfile(legacyGenerationCatalog)).toEqual(input.profile);
+    expect(generationCoordinator.generate(input, legacyGenerationCatalog)).toEqual(fixedFixture.expected);
+  });
+
+  it('accepts expanded Rap/Trap styles with independent moods deterministically', () => {
+    const source = request();
+    const input = freeze({ ...source, blueprint: { ...source.blueprint, style: {
+      ...source.blueprint.style,
+      genres: [{ id: 'rap', weight: 60 }, { id: 'trap', weight: 40 }],
+      moods: [{ id: 'mood:dark', weight: 50 }, { id: 'mood:chill', weight: 50 }],
+    } } });
+    const result = ready(generationCoordinator.generate(input, generationCatalog));
+    expect(generationCoordinator.generate(input, generationCatalog)).toEqual(result);
   });
 
   it('repeats full candidate text, scoring and selection from frozen inputs without writes', () => {

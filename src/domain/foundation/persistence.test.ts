@@ -8,7 +8,7 @@ import { decodeProject, MAX_PROJECT_BYTES, MAX_PROJECT_SECTIONS, projectSongSpec
 import { fromLegacyProject } from './adapters';
 import { catalog, freeze, generationCatalog } from './catalogs';
 import { createDefaultProfile, makeRecipe } from './generation';
-import { foundationCoordinator, narrativeCatalog } from './narrative-generation';
+import { foundationCoordinator, legacyNarrativeCatalog, narrativeCatalog } from './narrative-generation';
 import { documentApplicator, withRevision } from './editing';
 import { fingerprint } from './randomness';
 
@@ -276,13 +276,13 @@ describe('exact recipe replay from original history', () => {
   it('replays an admissible ordinal outside the displayed shortlist with active dialect and cleared annotations', () => {
     const source = structuredClone(fFixture.request) as unknown as GenerationRequest;
     const request: GenerationRequest = { ...source, blueprint: { ...source.blueprint, language: { ...source.blueprint.language, motif: 'apartment', dialect: { packId: 'dialect:british', strength: 3, mode: 'vocabulary' } }, sections: source.blueprint.sections.map(section => ({ ...section, constraints: { ...section.constraints, deliveryId: 'delivery:dense' } })) }, budget: { maxAttempts: 16, maxCandidates: 1 } };
-    const full = foundationCoordinator.generate({ ...request, budget: { ...request.budget, maxCandidates: 16 } }, narrativeCatalog);
-    const shortlist = foundationCoordinator.generate(request, narrativeCatalog);
+    const full = foundationCoordinator.generate({ ...request, budget: { ...request.budget, maxCandidates: 16 } }, legacyNarrativeCatalog);
+    const shortlist = foundationCoordinator.generate(request, legacyNarrativeCatalog);
     expect(full.status).toBe('ready'); expect(shortlist.status).toBe('ready');
     if (full.status !== 'ready' || shortlist.status !== 'ready') return;
     const candidate = full.candidates.find(entry => !shortlist.candidates.some(short => short.candidate.ordinal === entry.candidate.ordinal))!.candidate;
     expect(candidate.lines.every(line => line.text.includes('flat') && line.annotations.length === 0)).toBe(true);
-    const recipe = makeRecipe(request, candidate, narrativeCatalog);
+    const recipe = makeRecipe(request, candidate, legacyNarrativeCatalog);
     expect(expectResolved(replayRecipe(recipe))).toEqual(candidate);
     expect(replayRecipe({ ...recipe, outputFingerprint: 'forged' }).status).toBe('invalid-input');
   });

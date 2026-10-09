@@ -1,6 +1,6 @@
 /** Pure workspace operations. Browser persistence and React live outside this boundary. */
 import type { Project, PromptFormat } from '../types';
-import type { Diagnostic, GenerationRequest, HookArchetype, LyricCandidate, ProjectEnvelope, ReplayRecipe, ReplacementPolicy, SectionRole, TransformationPreview } from './contracts';
+import type { Diagnostic, GenerationRequest, HookArchetype, LyricCandidate, ProjectEnvelope, ReplayRecipe, ReplacementPolicy, Resolution, ResolvedStyle, SectionRole, TransformationPreview } from './contracts';
 import { toEnvelope, toEditorProject } from './persistence';
 import { foundationCoordinator, narrativeCatalog, narrativeProfile } from './narrative-generation';
 import { defaultEvaluationPolicy, makeRecipe } from './generation';
@@ -105,9 +105,19 @@ export function setStudioRole(project: Project, sectionId: string, role: Section
   const source = toEnvelope(project);
   return toEditorProject({ ...source, blueprint: { ...source.blueprint, sections: source.blueprint.sections.map(section => section.id === sectionId ? { ...section, role } : section) } });
 }
+function resolveStyleForSource(source: ReturnType<typeof toEnvelope>): Resolution<ResolvedStyle> {
+  return styleResolver.resolve(source.blueprint.style, narrativeCatalog, namedRandom(source.blueprint.rootSeed, ['style']));
+}
+export function resolveStudioStyle(project: Project): Resolution<ResolvedStyle> {
+  try {
+    return resolveStyleForSource(toEnvelope(project));
+  } catch (error) {
+    return { status: 'invalid-input', diagnostics: [problem('style-resolution', error instanceof Error ? error.message : 'Unable to resolve this style.')] };
+  }
+}
 export function compileStudioStyle(project: Project, format: PromptFormat): string {
   try {
-    const source = toEnvelope(project), result = styleResolver.resolve(source.blueprint.style, narrativeCatalog, namedRandom(source.blueprint.rootSeed, ['style']));
+    const source = toEnvelope(project), result = resolveStyleForSource(source);
     if (result.status !== 'resolved') return result.diagnostics.map(issue => issue.message).join('\n');
     const options = source.blueprint.language.dialect, tags = options ? narrativeCatalog.dialects.get(options.packId)?.styleTags || [] : [];
     return styleCompiler.compile(result.value, format) + (tags.length ? `\n\nRegional guidance: ${tags.join(', ')}.` : '');

@@ -49,7 +49,6 @@ import {
   textures,
   themes,
 } from "./domain/data";
-import { resolveStyle } from "./domain/engines";
 import {
   download,
   exampleProject,
@@ -70,6 +69,7 @@ import {
   previewStudioDialect,
   applyStudioDialect,
   duplicateStudioSection,
+  resolveStudioStyle,
   setStudioRole,
 } from "./domain/foundation/studio";
 import {
@@ -155,7 +155,7 @@ function App() {
     [current, project],
   );
   const styleResult = useMemo(
-    () => resolveStyle(project.style, project.seed),
+    () => resolveStudioStyle(project),
     [project.style, project.seed],
   );
   const stylePrompt = useMemo(
@@ -522,11 +522,23 @@ function App() {
                     title="Remove genre"
                     aria-label="Remove genre"
                     onClick={() =>
-                      updateStyle({
-                        genres: project.style.genres.filter(
+                      {
+                        const remaining = project.style.genres.filter(
                           (x) => x.id !== g.id,
-                        ),
-                      })
+                        );
+                        const total = remaining.reduce(
+                          (sum, genre) => sum + genre.weight,
+                          0,
+                        );
+                        updateStyle({
+                          genres: remaining.map((genre) => ({
+                            ...genre,
+                            weight: total
+                              ? (genre.weight / total) * 100
+                              : genre.weight,
+                          })),
+                        });
+                      }
                     }
                   >
                     <X size={12} />
@@ -561,7 +573,10 @@ function App() {
                   />
                   <span>
                     {Math.round(
-                      styleResult.blend.find((x) => x.id === g.id)?.weight || 0,
+                      styleResult.status === "resolved"
+                        ? styleResult.value.genres.find((x) => x.id === g.id)
+                            ?.weight || 0
+                        : 0,
                     )}
                     <small>%</small>
                   </span>
@@ -582,26 +597,42 @@ function App() {
               value=""
               onChange={(e) => {
                 if (!e.target.value) return;
+                const existingTotal = project.style.genres.reduce(
+                  (sum, genre) => sum + genre.weight,
+                  0,
+                );
+                const hasExistingBlend = existingTotal > 0;
                 updateStyle({
                   genres: [
                     ...project.style.genres.map((g) => ({
                       ...g,
-                      weight: g.weight * 0.8,
+                      weight: hasExistingBlend
+                        ? (g.weight / existingTotal) * 80
+                        : 0,
                     })),
-                    { id: e.target.value, weight: 20 },
+                    { id: e.target.value, weight: hasExistingBlend ? 20 : 100 },
                   ],
                 });
                 setGenrePicker(false);
               }}
             >
               <option value="">Choose a genre…</option>
-              {genres
-                .filter((g) => !project.style.genres.some((x) => x.id === g.id))
-                .map((g) => (
-                  <option key={g.id} value={g.id}>
-                    {g.name}
-                  </option>
-                ))}
+              {Array.from(new Set(genres.map((genre) => genre.family))).map((family) => {
+                const options = genres.filter(
+                  (genre) =>
+                    genre.family === family &&
+                    !project.style.genres.some((selected) => selected.id === genre.id),
+                );
+                return options.length ? (
+                  <optgroup key={family} label={family}>
+                    {options.map((genre) => (
+                      <option key={genre.id} value={genre.id}>
+                        {genre.name}
+                      </option>
+                    ))}
+                  </optgroup>
+                ) : null;
+              })}
             </select>
           )}
           <div className="field-label spaced">MOOD</div>
@@ -1705,10 +1736,10 @@ function App() {
                     </button>
                   </div>
                 </div>
-                {styleResult.warnings.map((w, i) => (
+                {styleResult.diagnostics.map((warning, i) => (
                   <div className="style-warning" key={i}>
                     <Lightbulb size={15} />
-                    {w}
+                    {warning.message}
                   </div>
                 ))}
                 <div className="prompt-explainer">

@@ -1,5 +1,5 @@
 import { textAnalyzer } from './analysis';
-import { catalog as baseCatalog, generationCatalog, freeze } from './catalogs';
+import { catalog as baseCatalog, generationCatalog, legacyGenerationCatalog, freeze } from './catalogs';
 import { candidateContextLines, candidateEvaluator, supportedRuleIds } from './constraints';
 import { isLineProtected, outputFingerprint, validateDocument, withRevision } from './editing';
 import { dialectTransformer } from './dialect';
@@ -37,11 +37,12 @@ const algorithms = freeze({
 });
 const bundledProfile = (snapshot: CatalogSnapshot): ExecutionProfile => freeze({ contractVersion: 1, algorithms, packs: [...snapshot.packs].sort((a, b) => compare(a.id, b.id)) });
 export const defaultProfile: ExecutionProfile = bundledProfile(generationCatalog);
+const legacyGenerationProfile = bundledProfile(legacyGenerationCatalog);
 const baseProfile = bundledProfile(baseCatalog);
 export const defaultEvaluationPolicy: EvaluationPolicy = freeze({ id: 'offline-draft', version: '1.0.0', hardRuleIds: ['avoided', 'cliche'], scoreWeights: { cadence: 1, rhyme: 1, repetition: 1, perspective: 1 } });
 /** Only bundled snapshots may select default refs; hashes from caller input are never registered. */
 export function createDefaultProfile(snapshot: CatalogSnapshot): ExecutionProfile {
-  for (const supported of [generationCatalog, baseCatalog]) if (fingerprint([...snapshot.packs].sort((a, b) => compare(a.id, b.id))) === fingerprint([...supported.packs].sort((a, b) => compare(a.id, b.id))) && catalogFingerprint(snapshot) === catalogFingerprint(supported)) return bundledProfile(supported);
+  for (const supported of [generationCatalog, legacyGenerationCatalog, baseCatalog]) if (fingerprint([...snapshot.packs].sort((a, b) => compare(a.id, b.id))) === fingerprint([...supported.packs].sort((a, b) => compare(a.id, b.id))) && catalogFingerprint(snapshot) === catalogFingerprint(supported)) return bundledProfile(supported);
   throw new Error('No supported execution profile for this catalogue');
 }
 
@@ -159,6 +160,7 @@ export interface SupportedGenerationProfile {
 }
 const bundledProfiles: readonly SupportedGenerationProfile[] = [
   { profile: defaultProfile, catalog: generationCatalog },
+  { profile: legacyGenerationProfile, catalog: legacyGenerationCatalog },
   { profile: baseProfile, catalog: baseCatalog },
 ];
 export interface CoordinatorOptions {

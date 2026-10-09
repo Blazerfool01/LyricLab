@@ -1,4 +1,4 @@
-import { genres, palette, cadenceRanges, traitConflicts } from '../data';
+import { genreAdditions, legacyGenres, palette, cadenceRanges, traitConflicts } from '../data';
 import { exceptions, dialectMaps, rhymeSets, claims } from '../legacy-pack';
 import type { CatalogSnapshot, CatalogView, DialectPack, GenreDefinition, PronunciationEntry, TemplateDefinition, TraitDefinition, VocabularyEntry } from './contracts';
 import { fingerprint } from './randomness';
@@ -39,15 +39,24 @@ const choiceGroups: Record<string, readonly (readonly [string,string])[]> = {
   dialect: [['standard','Standard'],['british','British English'],['american','American English']],
 };
 export interface FoundationCatalog extends CatalogSnapshot { readonly choices: CatalogView<Choice> }
+const familyIds: Record<string, string> = {
+  Folk: 'family:folk', Pop: 'family:pop', 'R&B': 'family:rnb', 'Hip-hop': 'family:hip-hop',
+  Rock: 'family:rock', Electronic: 'family:electronic', Soul: 'family:soul', Country: 'family:country',
+};
+function catalogGenresFrom(source: typeof legacyGenres, traits: TraitDefinition[]): GenreDefinition[] {
+  return source.map(g => {
+    const ids = ['foundation','accompaniment','detail'].map(key => `genre:${g.id}:${key}`);
+    g.descriptors.forEach((label,i) => traits.push({id:ids[i],label,categoryId:'genre-descriptor',excludes:[]}));
+    const familyId = familyIds[g.family];
+    if (!familyId) throw new Error(`Missing genre family ID: ${g.family}`);
+    return {id:g.id,label:g.name,familyId,traitIds:ids,bpmRange:g.bpm as [number,number]};
+  });
+}
 export function createCatalog(): FoundationCatalog {
   const choices: Choice[] = Object.entries(choiceGroups).flatMap(([category, entries]) => entries.map(([id,label]) => ({id: `${category}:${id}`, label, category, ...(cadenceRanges[label] ? {range: cadenceRanges[label]} : {})})));
   const choiceFor = (label: string, category: string) => choices.find(x => x.category === category && x.label === label)!;
   const traits: TraitDefinition[] = choices.filter(c => ['mood','instrument','production','texture','delivery','drums','bass','mix'].includes(c.category)).map(c => ({id:c.id,label:c.label,categoryId:c.category,excludes:traitConflicts.flatMap(rule => rule.domain === (c.category === 'mood' ? 'moods' : c.category) && rule.pair.includes(c.label) ? rule.pair.filter(x=>x!==c.label).map(x=>choiceFor(x,c.category).id) : [])}));
-  const genreEntries: GenreDefinition[] = genres.map(g => {
-    const ids = ['foundation','accompaniment','detail'].map(key => `genre:${g.id}:${key}`);
-    g.descriptors.forEach((label,i) => traits.push({id:ids[i],label,categoryId:'genre-descriptor',excludes:[]}));
-    return {id:g.id,label:g.name,familyId:({Folk:'family:folk',Pop:'family:pop','R&B':'family:rnb','Hip-hop':'family:hip-hop',Rock:'family:rock',Electronic:'family:electronic',Soul:'family:soul',Country:'family:country'} as Record<string,string>)[g.family],traitIds:ids,bpmRange:g.bpm as [number,number]};
-  });
+  const genreEntries = catalogGenresFrom(legacyGenres, traits);
   const vocabulary: VocabularyEntry[] = [];
   const templates: TemplateDefinition[] = [];
   for (const [id,label] of choiceGroups.theme) {
@@ -75,16 +84,36 @@ export function createCatalog(): FoundationCatalog {
   return freeze(snapshot);
 }
 /** Legacy facades retain the original object shape and descriptor ordering. */
-export const legacyGenreView = immutableView(genres);
+export const legacyGenreView = immutableView(legacyGenres);
 export const catalog = createCatalog();
+
+const addedGenreTraits: TraitDefinition[] = [];
+const addedGenreEntries = catalogGenresFrom(genreAdditions, addedGenreTraits);
+const addedMoodChoices: Choice[] = [{ id: 'mood:chill', label: 'Chill', category: 'mood' }];
+const addedMoodTraits: TraitDefinition[] = [{ id: 'mood:chill', label: 'Chill', categoryId: 'mood', excludes: [] }];
+const extensionTraits = [...addedGenreTraits, ...addedMoodTraits];
+const extensionContent = { genres: addedGenreEntries, traits: extensionTraits, choices: addedMoodChoices };
+/** New style data is additive so the original v0.1 replay pack remains exact. */
+export const expandedCatalog: FoundationCatalog = freeze({
+  ...catalog,
+  packs: [...catalog.packs, { id: 'genre-style-expansion-v1', version: '1.0.0', contentHash: fingerprint(extensionContent) }],
+  genres: immutableView([...catalog.genres.all(), ...addedGenreEntries]),
+  traits: immutableView([...catalog.traits.all(), ...extensionTraits]),
+  choices: immutableView([...catalog.choices.all(), ...addedMoodChoices]),
+});
+
 export function choiceId(category: string, label: string): string {
-  return catalog.choices.all().find(c=>c.category===category && c.label===label)?.id || `unavailable:${category}:${label}`;
+  return expandedCatalog.choices.all().find(c=>c.category===category && c.label===label)?.id || `unavailable:${category}:${label}`;
 }
 
 /** Additive pack: claims moved out of the legacy algorithm without rewriting base content. */
-const claimMetadata = Object.fromEntries(catalog.choices.all().filter(c=>c.category==='theme').map(c=>[c.id,claims[c.label]]));
-export const generationCatalog: FoundationCatalog = freeze({
-  ...catalog,
-  choices: immutableView(catalog.choices.all().map(c=>claimMetadata[c.id] ? {...c,claim:claimMetadata[c.id]} : c)),
-  packs: [...catalog.packs,{id:'legacy-claims',version:'1.0.0',contentHash:fingerprint(claimMetadata)}],
-});
+function withClaims(source: FoundationCatalog): FoundationCatalog {
+  const claimMetadata = Object.fromEntries(source.choices.all().filter(c=>c.category==='theme').map(c=>[c.id,claims[c.label]]));
+  return freeze({
+    ...source,
+    choices: immutableView(source.choices.all().map(c=>claimMetadata[c.id] ? {...c,claim:claimMetadata[c.id]} : c)),
+    packs: [...source.packs,{id:'legacy-claims',version:'1.0.0',contentHash:fingerprint(claimMetadata)}],
+  });
+}
+export const legacyGenerationCatalog: FoundationCatalog = withClaims(catalog);
+export const generationCatalog: FoundationCatalog = withClaims(expandedCatalog);

@@ -46,7 +46,7 @@ Open `http://localhost:8000`. Internet access is not needed. Opening `index.html
 
 The v0.1 Style Foundation is implemented, with an initial functional authoring workspace for later milestones:
 
-- Weighted blends across 10 genre / micro-genre definitions, with mood, rhythm, tempo, voice, instrumentation, bass, drums, production, and mix controls.
+- Weighted blends across 34 genre/style profiles in eight families, with 11 independent mood choices, rhythm, tempo, voice, instrumentation, bass, drums, production, and mix controls. Chill is a mood modifier; Chillout and Chillhop are separate styles.
 - Seeded, deterministic style resolution, normalized genre weights, compatibility guidance, and Compact / Detailed / Annotated compilers.
 - A responsive three-panel workspace with a mobile blueprint and inspector.
 - Editable lyric sections, section purposes and intensity, section / line locking, reordering, duplicating, deleting, and undo / redo.
@@ -62,7 +62,7 @@ The entire v1.0 roadmap is **not** declared complete. The current language and v
 
 - `src/domain/foundation/` — pure contracts, indexed catalogs, deterministic streams, engines, protection, migration, replay, and workspace operations.
 - `src/domain/types.ts` — legacy editor projection types.
-- `src/domain/data.ts` — stable genre IDs, declarative sound / language data, and delivery ranges.
+- `src/domain/data.ts` — stable genre IDs, family-grouped style profiles, declarative sound / language data, and delivery ranges.
 - `src/domain/engines.ts` — pure seeded style, lyric, rhyme, cadence, and dialect utilities, independent of React.
 - `src/domain/project.ts` — validated serialization, local project loading, export, and example project.
 - `src/App.tsx` — studio interactions.
